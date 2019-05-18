@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+	<!-- PAGE-LOAD ///////////////////////////////////////////////////
+	Resolve and caching DNS lookups initiates downloads faster
+	Browsers do this by default for assets present in the markup
+	Enable 'dns-prefetch' when dealing with cross-domain assets
+	(eg. API-calls, injected urls, 3rd party libs, ...)
+
+	<link rel="dns-prefetch" href="//google-analytics.com" />
+	<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+	<link rel="dns-prefetch" href="//fonts.gstatic.com" />
+	<link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+	-->
+
+	<!--
+	Use 'preconnect' to keep DNS lookups and handshakes open
+	NOTE: limited support, to be used in combination with 'dns-prefetch'
+
+	<link rel="preconnect" href="//cdnjs.cloudflare.com" crossorigin />
+	-->
+
+	<!--
+	Use 'prefetch' to preload assets once this page has finished
+	loading or 'prerender' to preload entire pages (with assets)
+	This results in faster downloads of assets and pages when
+	needed (eg. load ondemand, navigating to another page, ...)
+
+	<link rel="prefetch" href="{{ SOME-ASSET-OR-ANOTHER-PAGE }}" />
+	<link rel="prerender" href="{{ ANOTHER-PAGE }}" />
+	-->
+
+
+	<!-- CSS ///////////////////////////////////////////////////////// -->
+
+	<link rel="stylesheet" href="css/index.css">
+
+
+	<!-- SEO /////////////////////////////////////////////////////////
+	Set meta-data and force search engines to display this information
+	in search results (this prevents caching of meta-data)
+	-->
+
+	<title>The Aviator</title>
+
+	<meta name="description" content="">
+	<meta name="robots" content="noodp, noydir">
+
+	<!--
+	Signal search engines to 'use-this-URL-for-this-page', use this
+	when parameters (# or ?) are used to control the display state
+	<link rel="canonical" href="http://www.{{ URL }}" />
+	-->
+
+
+	<!-- META-TAGS FOR MOBILE ////////////////////////////////////////
+	Set the viewport for IOS to enable media queries and prevent phone
+	numbers from being displayed as hyperlinks (IOS default behavior)
+	NOTE: don't disable the ability to zoom, it's bad UX
+	NOTE: since IOS 11.3 scaling properties are ignored (needs R&D)
+
+	- iOS full screen with viewport-fit=cover
+	- https://stackoverflow.com/questions/46476265/ios-full-screen-web-app-color-status-bar
+
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+	<meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no"/>
+	-->
+
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+
+	<!-- MOBILE STANDALONE MODE //////////////////////////////////////
+	Enable the page to run in standalone (chromeless) mode from
+	the homescreen on Android and IOS
+
+	<meta name="mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-title" content="@@seo-title" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+	<meta name="application-name" content="@@seo-title">
+	<meta name="theme-color" content="#000000">
+	<meta name="msapplication-navbutton-color" content="#000000">
+	-->
+
+
+	<!-- G+ AND FACEBOOK /////////////////////////////////////////////
+
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="@@seo-title" />
+	<meta property="og:description" content="@@seo-description" />
+	<meta property="og:image" content="http://www.{{ URL }}/social.jpg" />
+	<meta property="og:url" content="http://www.{{ URL }}" />
+	-->
+
+
+	<!-- TWITTER CARDS ///////////////////////////////////////////////
+	NOTE: Twitter cards need to be validated and approved after launch
+	====> https://dev.twitter.com/docs/cards/validation/validator
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@{{ TWITTER-ACCOUNT }}" />
+	<meta name="twitter:title" content="@@seo-title" />
+	<meta name="twitter:description" content="@@seo-description" />
+	<meta name="twitter:image:src" content="http://www.{{ URL }}/social.jpg" />
+	-->
+
+
+	<!-- FAVICONS ////////////////////////////////////////////////////
+	- http://favicon.htmlkit.com/favicon
+	- http://www.favicomatic.com
+	-->
+
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	<link rel="icon" href="favicon.ico">
+
+</head>
+<body>
+
+	<section id="world" class="world"></section>
+	
+
+	<!-- SVG ICONS /////////////////////////////////////////////////// -->
+
+	<!-- SVG ICONS ///////////////////////////////////////////////////////
+- https://codepen.io/ruandre/pen/howFi
+- http://www.svgminify.com
+
+Usage example:
+
+<svg width="44" height="44"><use xlink:href="#icon-facebook" /></svg>
+<svg width="44" height="44"><use xlink:href="#icon-twitter" /></svg>
+-->
+
+<svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
+	<symbol id="icon-facebook" viewBox="0 0 512 512"><path d="m211.9 197.4h-36.7v59.9h36.7v175.8h70.5v-176.6h49.2l5.2-59.1h-54.4v-33.7c0-13.9 2.8-19.5 16.3-19.5h38.2v-61.3h-48.8c-52.5 0-76.1 23.1-76.1 67.3-0.1 38.6-0.1 47.2-0.1 47.2z"/></symbol>
+	<symbol id="icon-twitter" viewBox="0 0 512 512"><path d="m419.6 168.6c-11.7 5.2-24.2 8.7-37.4 10.2 13.4-8.1 23.8-20.8 28.6-36-12.6 7.5-26.5 12.9-41.3 15.8-11.9-12.6-28.8-20.6-47.5-20.6-42 0-72.9 39.2-63.4 79.9-54.1-2.7-102.1-28.6-134.2-68-17 29.2-8.8 67.5 20.1 86.9-10.7-0.3-20.7-3.3-29.5-8.1-0.7 30.2 20.9 58.4 52.2 64.6-9.2 2.5-19.2 3.1-29.4 1.1 8.3 25.9 32.3 44.7 60.8 45.2-27.4 21.4-61.8 31-96.4 27 28.8 18.5 63 29.2 99.8 29.2 120.8 0 189.1-102.1 185-193.6 12.9-9.1 23.9-20.5 32.6-33.6z"/></symbol>
+</svg>
+
+
+
+	<!-- SCRIPTS /////////////////////////////////////////////////////
+	For 3rd party libraries we're better off using a CDN,
+	providing we have a local fallback in place
+	-->
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/90/three.min.js"></script>
+	<script>window.THREE || document.write('<script src="js/vendor/three-v90.min.js"><\/script>')</script>
+
+	<script src="js/index.bundle.js" async defer="defer"></script>
+
+
+	<!-- GOOGLE ANALYTICS ////////////////////////////////////////////
+	- https://developers.google.com/analytics/devguides/collection/analyticsjs/#the_javascript_tracking_snippet
+	- https://github.com/h5bp/html5-boilerplate/blob/master/src/index.html
+
+	Async Google Analytics - change UA-XXXXX-X to your site ID
+	<script>
+		window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+		ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
+	</script>
+	<script src="https://www.google-analytics.com/analytics.js" async defer></script>
+	-->
+
+</body>
+</html>

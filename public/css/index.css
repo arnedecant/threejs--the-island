@@ -1,0 +1,16 @@
+/* line 25, src/sass/main.scss */
+body {
+  margin: 0px;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* line 32, src/sass/main.scss */
+.world {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: -webkit-gradient(linear, left top, left bottom, from(#e4e0ba), to(#f7d9aa));
+  background: linear-gradient(#e4e0ba, #f7d9aa);
+}
