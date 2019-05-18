@@ -4,41 +4,35 @@
 
 // import * as data from '../assets/data.json'
 import { normalize } from './utilities/math.js'
-import Airplane from './models/airplane.js'
-import Sea from './models/sea.js'
-import Sky from './models/sky.js'
-import Bullet from './models/bullet.js'
+import Grassland from './models/grassland.js'
 
 class App {
 
 	constructor() {
 
-		const url = new URL(window.location.href)
+		window.COLORS = {
+			cyan: 0x248079,
+			brown: 0xA98F78,
+			brownDark: 0x9A6169,
+			green: 0x65BB61,
+			greenLight: 0xABD66A, 
+			blue: 0x6BC6FF
+		}
+
 
 		// set properties
 		this.config = {
-			debug: false,
+			debug: true,
 			camera: {
 				zpf: 5, // zoom per frame
-				default: { x: 0, y: 100, z: 200 },
-				min: { x: 0, y: 100, z: 50 },
-				max: { x: 0, y: 100, z: 200 }
+				default: { x: -5, y: 6, z: 8 },
+				min: { x: 0, y: 0, z: 0 },
+				max: { x: 0, y: 1000, z: 1000 }
 			}
 		}
 
-		this.zoom = url.searchParams.get('zoom') || 1
+		this.zoom = 1
 		this.scrollSpeed = 0
-		this.shooting = false
-		this.bullets = []
-
-		this.colors = {
-			black: 0x23190f,
-			brown: 0x59332e,
-			red: 0xf25346,
-			orange: 0xF5986E,
-			blue: 0x68c3c0,
-			white: 0xd8d0d1
-		}
 
 		this.mouse = { x: 0, y: 0 }
 
@@ -59,9 +53,7 @@ class App {
 		this.createLights()
 
 		// add objects
-		this.createAirplane()
-		this.createSea()
-		this.createSky()
+		this.createGrassland()
 
 		// add events
 		window.addEventListener('resize', this.resize.bind(this), false)
@@ -94,7 +86,7 @@ class App {
 		this.createRenderer()
 
 		// add debug helpers
-		if (this.config.debug) initDebug()
+		if (this.config.debug) this.initDebug()
 
 	}
 
@@ -125,6 +117,8 @@ class App {
 		this.camera.position.x = this.config.camera.default.x
 		this.camera.position.y = this.config.camera.default.y
 		this.camera.position.z = this.config.camera.default.z
+
+		this.camera.lookAt(new THREE.Vector3(0,0,0))
 
 	}
 
@@ -187,87 +181,14 @@ class App {
 
 	}
 
-	createAirplane() {
+	createGrassland() {
 
 		// create new object
-		this.airplane = new Airplane(this.colors)
+		this.grassland = new Grassland()
 
-		// set position and scale
-		this.airplane.mesh.position.y = 100
-		this.airplane.mesh.scale.set(0.25, 0.25, 0.25)
-
-		// add the airplane to the scene
-		this.scene.add(this.airplane.mesh)
+		// add the grassland to the scene
+		this.scene.add(this.grassland.mesh)
 		this.scene.updateMatrixWorld(true)
-
-	}
-
-	createSea() {
-
-		// create new object
-		this.sea = new Sea(this.colors.blue)
-
-		// push it down
-		this.sea.mesh.position.y = -600
-
-		// add the sea to the scene
-		this.scene.add(this.sea.mesh)
-
-	}
-
-	createSky() {
-
-		// create new object
-		this.sky = new Sky(20)
-
-		// push it down
-		this.sky.mesh.position.y = -600
-
-		// add the sky to the scene
-		this.scene.add(this.sky.mesh)
-
-	}
-
-	spawnBullets() {
-
-		// get airplane position
-		let position = new THREE.Vector3()
-		position.setFromMatrixPosition(this.airplane.mesh.matrixWorld)
-
-		// create a new object
-		let bullet = new Bullet(this.colors.black, position)
-
-		// add bullet to scene and bullet array
-		this.scene.add(bullet.mesh)
-		this.bullets.push(bullet)
-
-	}
-
-	updateAirplane() {
-
-		/*
-			allowed positions for the airplane
-			x: between -100 and 100
-			y: between 25 and 175
-
-			==> depends on mouse position (between -1 and 1)
-		*/
-
-		// calculate position based on normalize function (utils.js)
-		let targetX = normalize(this.mouse.x, -1, 1, -100, 100)
-		let targetY = normalize(this.mouse.y, -1, 1, 25, 175)
-
-		// update airplane position
-		// move the plane at each frame by adding a fraction of the remaining distance
-		this.airplane.mesh.position.x += (targetX - this.airplane.mesh.position.x) * 0.1;
-		this.airplane.mesh.position.y += (targetY - this.airplane.mesh.position.y) * 0.1;
-
-		// rotate the plane proportionally to the remaining distance
-		this.airplane.mesh.rotation.z = (targetY - this.airplane.mesh.position.y) * 0.0128;
-		this.airplane.mesh.rotation.x = (this.airplane.mesh.position.y - targetY) * 0.0064;
-
-		// rotate propeller
-		this.airplane.propeller.rotation.x += 0.3
 
 	}
 
@@ -384,21 +305,6 @@ class App {
 
 		// update zoom
 		this.updateZoom()
-
-		// rotate sky
-		this.sky.mesh.rotation.z += 0.01
-
-		// update the airplane
-		this.updateAirplane()
-
-		// update the waves
-		this.sea.moveWaves()
-
-		// animate pilot hair
-		this.airplane.pilot.updateHairs()
-
-		// if shooting: spawn bullets
-		// if (this.shooting) this.spawnBullets()
 
 		// render
   		this.renderer.render(this.scene, this.camera);

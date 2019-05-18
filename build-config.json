@@ -3,7 +3,7 @@
 	"targets": [
 		{
 			"id": "index",
-			"seo-title": "The Aviator",
+			"seo-title": "The Island",
 			"seo-description": "",
 			"src-html": "index.html",
 			"src-sass": "main.scss",
