@@ -43,69 +43,81 @@ export default class Grassland {
 
 	}
 
+	createRiver() {
+
+		let geometry = new THREE.BoxGeometry(1, 0.15, 2)
+		let mesh = new THREE.Mesh(geometry, this.materials.river)
+
+		mesh.position.set(0.5, 0.1, 0)
+
+		this.meshes.push({type: 'river', mesh: mesh})
+
+	}
+
 	createGrass() {
 
-		this.grass = new THREE.Geometry()
+		let geometry = new THREE.Geometry()
+		let meshes = []
 
-		this.createGrassLeft()
-		this.createGrassBack()
-		this.createRiverBed()
-		this.createGrassRight()
-		
+		meshes.push(this.createGrassLeft())
+		meshes.push(this.createGrassBack())
+		meshes.push(this.createRiverBed())
+		meshes.push(this.createGrassRight())
+
+		meshes.forEach((obj) => {
+
+			obj.mesh.updateMatrix()
+			geometry.merge(obj.mesh.geometry, obj.mesh.matrix);
+
+		})
+
+		let mesh = new THREE.Mesh(geometry, this.materials.grass)
+
+		this.meshes.push({ type: 'grass', mesh: mesh })
+
 	}
 
 	createGrassLeft() {
 
 		let geometry = new THREE.BoxGeometry(2, 0.2, 2)
-		let grassLeft = new THREE.Mesh(geometry, this.materials.grass)
+		let mesh = new THREE.Mesh(geometry)
 
-		grassLeft.position.set(-1, 0.1, 0)
+		mesh.position.set(-1, 0.1, 0)
 
-		this.meshes.push({type: 'grass', mesh: grassLeft})
+		return { type: 'grass', mesh: mesh }
 
 	}
 
 	createGrassBack() {
 
 		let geometry = new THREE.BoxGeometry(1, 0.2, 0.2)
-		let grassBack = new THREE.Mesh(geometry, this.materials.grass)
+		let mesh = new THREE.Mesh(geometry)
 
-		grassBack.position.set(0.5, 0.1, -0.9)
+		mesh.position.set(0.5, 0.1, -0.9)
 
-		this.meshes.push({type: 'grass', mesh: grassBack})
+		return { type: 'grass', mesh: mesh }
 
 	}
 
 	createRiverBed() {
 
 		let geometry = new THREE.BoxGeometry(1, 0.05, 2)
-		let riverbed = new THREE.Mesh(geometry, this.materials.grass)
+		let mesh = new THREE.Mesh(geometry)
 
-		riverbed.position.set(0.5, 0.025, 0)
+		mesh.position.set(0.5, 0.025, 0)
 
-		this.meshes.push({type: 'grass', mesh: riverbed})
+		return {type: 'grass', mesh: mesh}
 
 	}
 
 	createGrassRight() {
 
 		let geometry = new THREE.BoxGeometry(1, 0.2, 2)
-		let grassRight = new THREE.Mesh(geometry,this.materials.grass)
+		let mesh = new THREE.Mesh(geometry)
 
-		grassRight.position.set(1.5, 0.1, 0)
+		mesh.position.set(1.5, 0.1, 0)
 
-		this.meshes.push({type: 'grass', mesh: grassRight})
-
-	}
-
-	createRiver() {
-
-		let geometry = new THREE.BoxGeometry(1, 0.15, 2)
-		let river = new THREE.Mesh(geometry, this.materials.river)
-
-		river.position.set(0.5, 0.1, 0)
-
-		this.meshes.push({type: 'river', mesh: river})
+		return {type: 'grass', mesh: mesh}
 
 	}
 

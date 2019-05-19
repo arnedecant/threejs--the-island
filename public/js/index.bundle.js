@@ -463,70 +463,81 @@ var Grassland = function () {
 						});
 				}
 		}, {
+				key: 'createRiver',
+				value: function createRiver() {
+
+						var geometry = new THREE.BoxGeometry(1, 0.15, 2);
+						var mesh = new THREE.Mesh(geometry, this.materials.river);
+
+						mesh.position.set(0.5, 0.1, 0);
+
+						this.meshes.push({ type: 'river', mesh: mesh });
+				}
+		}, {
 				key: 'createGrass',
 				value: function createGrass() {
 
-						this.grass = new THREE.Geometry();
+						var geometry = new THREE.Geometry();
+						var meshes = [];
 
-						this.createGrassLeft();
-						this.createGrassBack();
-						this.createRiverBed();
-						this.createGrassRight();
+						meshes.push(this.createGrassLeft());
+						meshes.push(this.createGrassBack());
+						meshes.push(this.createRiverBed());
+						meshes.push(this.createGrassRight());
+
+						meshes.forEach(function (obj) {
+
+								obj.mesh.updateMatrix();
+								geometry.merge(obj.mesh.geometry, obj.mesh.matrix);
+						});
+
+						var mesh = new THREE.Mesh(geometry, this.materials.grass);
+
+						this.meshes.push({ type: 'grass', mesh: mesh });
 				}
 		}, {
 				key: 'createGrassLeft',
 				value: function createGrassLeft() {
 
 						var geometry = new THREE.BoxGeometry(2, 0.2, 2);
-						var grassLeft = new THREE.Mesh(geometry, this.materials.grass);
+						var mesh = new THREE.Mesh(geometry);
 
-						grassLeft.position.set(-1, 0.1, 0);
+						mesh.position.set(-1, 0.1, 0);
 
-						this.meshes.push({ type: 'grass', mesh: grassLeft });
+						return { type: 'grass', mesh: mesh };
 				}
 		}, {
 				key: 'createGrassBack',
 				value: function createGrassBack() {
 
 						var geometry = new THREE.BoxGeometry(1, 0.2, 0.2);
-						var grassBack = new THREE.Mesh(geometry, this.materials.grass);
+						var mesh = new THREE.Mesh(geometry);
 
-						grassBack.position.set(0.5, 0.1, -0.9);
+						mesh.position.set(0.5, 0.1, -0.9);
 
-						this.meshes.push({ type: 'grass', mesh: grassBack });
+						return { type: 'grass', mesh: mesh };
 				}
 		}, {
 				key: 'createRiverBed',
 				value: function createRiverBed() {
 
 						var geometry = new THREE.BoxGeometry(1, 0.05, 2);
-						var riverbed = new THREE.Mesh(geometry, this.materials.grass);
+						var mesh = new THREE.Mesh(geometry);
 
-						riverbed.position.set(0.5, 0.025, 0);
+						mesh.position.set(0.5, 0.025, 0);
 
-						this.meshes.push({ type: 'grass', mesh: riverbed });
+						return { type: 'grass', mesh: mesh };
 				}
 		}, {
 				key: 'createGrassRight',
 				value: function createGrassRight() {
 
 						var geometry = new THREE.BoxGeometry(1, 0.2, 2);
-						var grassRight = new THREE.Mesh(geometry, this.materials.grass);
+						var mesh = new THREE.Mesh(geometry);
 
-						grassRight.position.set(1.5, 0.1, 0);
+						mesh.position.set(1.5, 0.1, 0);
 
-						this.meshes.push({ type: 'grass', mesh: grassRight });
-				}
-		}, {
-				key: 'createRiver',
-				value: function createRiver() {
-
-						var geometry = new THREE.BoxGeometry(1, 0.15, 2);
-						var river = new THREE.Mesh(geometry, this.materials.river);
-
-						river.position.set(0.5, 0.1, 0);
-
-						this.meshes.push({ type: 'river', mesh: river });
+						return { type: 'grass', mesh: mesh };
 				}
 		}]);
 
