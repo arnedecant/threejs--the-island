@@ -108,7 +108,8 @@ var App = function () {
 						debug: true,
 						camera: {
 								zpf: 5, // zoom per frame
-								default: { x: -5, y: 6, z: 8 },
+								// default: { x: -5, y: 6, z: 8 },
+								default: { x: -1.25, y: 1.5, z: 2 },
 								min: { x: 0, y: 0, z: 0 },
 								max: { x: 0, y: 1000, z: 1000 }
 						}
@@ -226,37 +227,23 @@ var App = function () {
 				key: 'createLights',
 				value: function createLights() {
 
-						// create a new hemisphere light (a gradient colored light)
-						this.hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9);
+						// create a new ambient light
+						this.light = new THREE.AmbientLight(0xffffff, 0.5);
 
-						// create a new directional light (a light that shines from a specific direction)
-						this.shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
-
-						// create a new ambient light (a light that modifies the global color of a scene and makes the shadows softer)
-						this.ambientLight = new THREE.AmbientLight(0xdc8874, 0.3);
-
-						// set the direction of the light
-						this.shadowLight.position.set(150, 350, 350);
-
-						// allow shadow casting
+						// create a new shadow light
+						this.shadowLight = new THREE.DirectionalLight(0xffffff, 0.5);
+						this.shadowLight.position.set(200, 200, 200);
 						this.shadowLight.castShadow = true;
 
-						// set visible area of the projected shadow
-						this.shadowLight.shadow.camera.left = -400;
-						this.shadowLight.shadow.camera.right = 400;
-						this.shadowLight.shadow.camera.top = 400;
-						this.shadowLight.shadow.camera.bottom = -400;
-						this.shadowLight.shadow.camera.near = 1;
-						this.shadowLight.shadow.camera.far = 1000;
-
-						// set the resolution fo the shadow
-						this.shadowLight.shadow.mapSize.width = 2048;
-						this.shadowLight.shadow.mapSize.height = 2048;
+						// create a new back light
+						this.backLight = new THREE.DirectionalLight(0xffffff, 0.2);
+						this.backLight.position.set(-100, 200, 50);
+						this.backLight.castShadow = true;
 
 						// add lights to the scene
-						this.scene.add(this.hemisphereLight);
+						this.scene.add(this.light);
 						this.scene.add(this.shadowLight);
-						this.scene.add(this.ambientLight);
+						this.scene.add(this.backLight);
 				}
 		}, {
 				key: 'createGrassland',
@@ -440,7 +427,7 @@ var Grassland = function () {
 				// set properties
 				// ...
 
-				// create an empty container that will hold the different parts of the island
+				// create an empty container that will hold the different parts of the grassland
 				this.mesh = new THREE.Object3D();
 				this.meshes = [];
 
@@ -453,55 +440,93 @@ var Grassland = function () {
 				value: function init() {
 						var _this = this;
 
-						this.material = new THREE.MeshPhongMaterial({
-								color: COLORS.greenLight,
-								flatShading: true
+						this.materials = {
+								grass: new THREE.MeshPhongMaterial({
+										color: COLORS.greenLight,
+										flatShading: true
+								}),
+								river: new THREE.MeshPhongMaterial({
+										color: COLORS.blue,
+										flatShading: true
+								})
+						};
+
+						this.createGrass();
+						this.createRiver();
+
+						this.meshes.forEach(function (obj) {
+
+								obj.mesh.castShadow = true;
+								obj.mesh.receiveShadow = true;
+
+								_this.mesh.add(obj.mesh);
 						});
+				}
+		}, {
+				key: 'createGrass',
+				value: function createGrass() {
+
+						this.grass = new THREE.Geometry();
 
 						this.createGrassLeft();
+						this.createGrassBack();
 						this.createRiverBed();
 						this.createGrassRight();
-
-						this.meshes.forEach(function (mesh) {
-
-								mesh.castShadow = true;
-								mesh.receiveShadow = true;
-
-								_this.mesh.add(mesh);
-						});
 				}
 		}, {
 				key: 'createGrassLeft',
 				value: function createGrassLeft() {
 
 						var geometry = new THREE.BoxGeometry(2, 0.2, 2);
-						var grassLeft = new THREE.Mesh(geometry, this.material);
+						var grassLeft = new THREE.Mesh(geometry, this.materials.grass);
 
 						grassLeft.position.set(-1, 0.1, 0);
 
-						this.meshes.push(grassLeft);
+						this.meshes.push({ type: 'grass', mesh: grassLeft });
+				}
+		}, {
+				key: 'createGrassBack',
+				value: function createGrassBack() {
+
+						var geometry = new THREE.BoxGeometry(1, 0.2, 0.2);
+						var grassBack = new THREE.Mesh(geometry, this.materials.grass);
+
+						grassBack.position.set(0.5, 0.1, -0.9);
+
+						this.meshes.push({ type: 'grass', mesh: grassBack });
 				}
 		}, {
 				key: 'createRiverBed',
 				value: function createRiverBed() {
 
 						var geometry = new THREE.BoxGeometry(1, 0.05, 2);
-						var riverbed = new THREE.Mesh(geometry, this.material);
+						var riverbed = new THREE.Mesh(geometry, this.materials.grass);
 
 						riverbed.position.set(0.5, 0.025, 0);
 
-						this.meshes.push(riverbed);
+						this.meshes.push({ type: 'grass', mesh: riverbed });
 				}
 		}, {
 				key: 'createGrassRight',
 				value: function createGrassRight() {
 
 						var geometry = new THREE.BoxGeometry(1, 0.2, 2);
-						var grassRight = new THREE.Mesh(geometry, this.material);
+						var grassRight = new THREE.Mesh(geometry, this.materials.grass);
 
 						grassRight.position.set(1.5, 0.1, 0);
 
-						this.meshes.push(grassRight);
+						this.meshes.push({ type: 'grass', mesh: grassRight });
+				}
+		}, {
+				key: 'createRiver',
+				value: function createRiver() {
+
+						var geometry = new THREE.BoxGeometry(1, 0.15, 2);
+						var river = new THREE.Mesh(geometry, this.materials.river);
+
+						river.position.set(0.5, 0.1, 0);
+
+						this.meshes.push({ type: 'river', mesh: river });
 				}
 		}]);
 

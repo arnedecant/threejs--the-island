@@ -25,7 +25,8 @@ class App {
 			debug: true,
 			camera: {
 				zpf: 5, // zoom per frame
-				default: { x: -5, y: 6, z: 8 },
+				// default: { x: -5, y: 6, z: 8 },
+				default: { x: -1.25, y: 1.5, z: 2 },
 				min: { x: 0, y: 0, z: 0 },
 				max: { x: 0, y: 1000, z: 1000 }
 			}
@@ -147,37 +148,23 @@ class App {
 
 	createLights() {
 
-		// create a new hemisphere light (a gradient colored light)
-		this.hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9)
+		// create a new ambient light
+		this.light = new THREE.AmbientLight(0xffffff, 0.5)
 
-		// create a new directional light (a light that shines from a specific direction)
-		this.shadowLight = new THREE.DirectionalLight(0xffffff, 0.9)
-
-		// create a new ambient light (a light that modifies the global color of a scene and makes the shadows softer)
-		this.ambientLight = new THREE.AmbientLight(0xdc8874, 0.3)
-
-		// set the direction of the light
-		this.shadowLight.position.set(150, 350, 350)
-
-		// allow shadow casting
+		// create a new shadow light
+		this.shadowLight = new THREE.DirectionalLight(0xffffff, 0.5)
+		this.shadowLight.position.set(200, 200, 200)
 		this.shadowLight.castShadow = true
 
-		// set visible area of the projected shadow
-		this.shadowLight.shadow.camera.left = -400;
-		this.shadowLight.shadow.camera.right = 400;
-		this.shadowLight.shadow.camera.top = 400;
-		this.shadowLight.shadow.camera.bottom = -400;
-		this.shadowLight.shadow.camera.near = 1;
-		this.shadowLight.shadow.camera.far = 1000;
-
-		// set the resolution fo the shadow
-		this.shadowLight.shadow.mapSize.width = 2048
-		this.shadowLight.shadow.mapSize.height = 2048
+		// create a new back light
+		this.backLight = new THREE.DirectionalLight(0xffffff, 0.2)
+		this.backLight.position.set(-100, 200, 50)
+		this.backLight.castShadow = true
 
 		// add lights to the scene
-		this.scene.add(this.hemisphereLight)
+		this.scene.add(this.light)
 		this.scene.add(this.shadowLight)
-		this.scene.add(this.ambientLight)
+		this.scene.add(this.backLight)
 
 	}
 
