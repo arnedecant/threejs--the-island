@@ -83,9 +83,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _math = __webpack_require__(1);
 
-var _grassland = __webpack_require__(2);
+var _island = __webpack_require__(2);
 
-var _grassland2 = _interopRequireDefault(_grassland);
+var _island2 = _interopRequireDefault(_island);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -104,6 +104,7 @@ var App = function () {
 						blue: 0x6BC6FF
 
 						// set properties
+
 				};this.config = {
 						debug: true,
 						camera: {
@@ -117,10 +118,10 @@ var App = function () {
 
 				this.zoom = 1;
 				this.scrollSpeed = 0;
-
 				this.mouse = { x: 0, y: 0
 
 						// init
+
 				};this.init();
 		}
 
@@ -129,18 +130,23 @@ var App = function () {
 				value: function init() {
 
 						// skip if there's no THREE
+
 						if (!THREE) return;
 
 						// set up scene, camera and renderer
+
 						this.createScene();
 
 						// add lights
+
 						this.createLights();
 
 						// add objects
-						this.createGrassland();
+
+						this.createIsland();
 
 						// add events
+
 						window.addEventListener('resize', this.resize.bind(this), false);
 						window.addEventListener('mousemove', this.mousemove.bind(this), false);
 						window.addEventListener('mousedown', this.mousedown.bind(this), false);
@@ -148,6 +154,7 @@ var App = function () {
 						window.addEventListener('mousewheel', this.scroll.bind(this), { passive: true });
 
 						// render
+
 						this.render();
 				}
 		}, {
@@ -155,22 +162,28 @@ var App = function () {
 				value: function createScene() {
 
 						// set width & height
+
 						this.height = window.innerHeight;
 						this.width = window.innerWidth;
 
 						// create new scene
+
 						this.scene = new THREE.Scene();
 
 						// add fog to the scene
+
 						this.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
 
 						// create the camera
+
 						this.createCamera();
 
 						// create the renderer
+
 						this.createRenderer();
 
 						// add debug helpers
+
 						if (this.config.debug) this.initDebug();
 				}
 		}, {
@@ -185,15 +198,18 @@ var App = function () {
 				value: function createCamera() {
 
 						// set values to init the camera
+
 						this.aspectRatio = this.width / this.height;
 						this.fieldOfView = 60;
 						this.nearPlane = 1;
 						this.farPlane = 10000;
 
 						// create a new camera
+
 						this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.aspectRatio, this.nearPlane, this.farPlane);
 
 						// set camera position
+
 						this.camera.position.x = this.config.camera.default.x;
 						this.camera.position.y = this.config.camera.default.y;
 						this.camera.position.z = this.config.camera.default.z;
@@ -205,21 +221,26 @@ var App = function () {
 				value: function createRenderer() {
 
 						// create new renderer
+
 						this.renderer = new THREE.WebGLRenderer({
 								alpha: true,
 								antialias: true
 						});
 
 						// set the size
+
 						this.renderer.setSize(this.width, this.height);
 
 						// enable shadowMap
+
 						this.renderer.shadowMap.enabled = true;
 
 						// support for HDPI displays
+
 						this.renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
 
 						// append to DOM
+
 						this.container = document.querySelector('#world');
 						this.container.appendChild(this.renderer.domElement);
 				}
@@ -228,32 +249,38 @@ var App = function () {
 				value: function createLights() {
 
 						// create a new ambient light
+
 						this.light = new THREE.AmbientLight(0xffffff, 0.5);
 
 						// create a new shadow light
+
 						this.shadowLight = new THREE.DirectionalLight(0xffffff, 0.5);
 						this.shadowLight.position.set(200, 200, 200);
 						this.shadowLight.castShadow = true;
 
 						// create a new back light
+
 						this.backLight = new THREE.DirectionalLight(0xffffff, 0.2);
 						this.backLight.position.set(-100, 200, 50);
 						this.backLight.castShadow = true;
 
 						// add lights to the scene
+
 						this.scene.add(this.light);
 						this.scene.add(this.shadowLight);
 						this.scene.add(this.backLight);
 				}
 		}, {
-				key: 'createGrassland',
-				value: function createGrassland() {
+				key: 'createIsland',
+				value: function createIsland() {
 
 						// create new object
-						this.grassland = new _grassland2.default();
 
-						// add the grassland to the scene
-						this.scene.add(this.grassland.mesh);
+						this.island = new _island2.default();
+
+						// add the island to the scene
+
+						this.scene.add(this.island.mesh);
 						this.scene.updateMatrixWorld(true);
 				}
 		}, {
@@ -261,22 +288,27 @@ var App = function () {
 				value: function updateZoom() {
 
 						// no need to zoom when scrollSpeed hasn't been updated
+
 						if (this.scrollSpeed == 0) return;
 
 						// zoom per frame
+
 						var zpf = this.config.camera.zpf;
 
 						// min & max values
+
 						var zMin = this.config.camera.min.z,
 						    zMax = this.config.camera.max.z;
 
 						// smoother scrolling at the end of the animation
 						// prevents zooms very small values, for example 1.2 ...
+
 						if (Math.abs(this.scrollSpeed) < 2 * zpf) {
 								zpf = zpf / 2;
 						}
 
 						// redefine the zoom per frame
+
 						if (this.scrollSpeed > 0) {
 
 								// zoom out
@@ -301,13 +333,16 @@ var App = function () {
 						}
 
 						// get new z-pos
+
 						var z = this.camera.position.z + zpf;
 
 						// set boundaries for z-pos
+
 						z = z > zMin ? z : zMin;
 						z = z < zMax ? z : zMax;
 
 						// apply position if it's above threshold
+
 						this.camera.position.z = z;
 				}
 		}, {
@@ -316,6 +351,7 @@ var App = function () {
 
 						// only store the scroll value
 						// zoom will be handled in the render function
+
 						this.scrollSpeed = e.deltaY / 2;
 				}
 		}, {
@@ -323,10 +359,12 @@ var App = function () {
 				value: function mousemove(e) {
 
 						// convert mouse position to a normalized value between -1 and 1
+
 						var tx = -1 + e.clientX / this.width * 2; // x-axis
 						var ty = 1 - e.clientY / this.height * 2; // y-axis
 
 						// apply converted values
+
 						this.mouse = {
 								x: tx,
 								y: ty
@@ -349,18 +387,22 @@ var App = function () {
 				value: function resize(e) {
 
 						// set canvas dimensions
+
 						this.width = window.innerWidth;
 						this.height = window.innerHeight;
 
 						// set renderer dimensions
+
 						this.renderer.setSize(this.width, this.height);
 
 						// set camera
+
 						this.aspectRatio = this.width / this.height;
 						this.camera.aspect = this.aspectRatio;
 						this.camera.updateProjectionMatrix();
 
 						// render
+
 						// this.render()
 				}
 		}, {
@@ -368,12 +410,15 @@ var App = function () {
 				value: function render() {
 
 						// update zoom
+
 						this.updateZoom();
 
 						// render
+
 						this.renderer.render(this.scene, this.camera);
 
 						// add self to the requestAnimationFrame
+
 						window.requestAnimationFrame(this.render.bind(this));
 				}
 		}]);
@@ -413,6 +458,74 @@ function normalize(v, vmin, vmax, tmin, tmax) {
 
 
 Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _grassland = __webpack_require__(3);
+
+var _grassland2 = _interopRequireDefault(_grassland);
+
+var _bridge = __webpack_require__(4);
+
+var _bridge2 = _interopRequireDefault(_bridge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Island = function () {
+	function Island() {
+		_classCallCheck(this, Island);
+
+		// set properties
+
+		this.materials = {};
+		this.mesh = new THREE.Object3D();
+		this.meshes = [];
+
+		// init
+
+		this.init();
+	}
+
+	_createClass(Island, [{
+		key: 'init',
+		value: function init() {
+
+			this.createGrassland();
+			this.createBridge();
+		}
+	}, {
+		key: 'createGrassland',
+		value: function createGrassland() {
+
+			this.grassland = new _grassland2.default();
+			this.mesh.add(this.grassland.mesh);
+		}
+	}, {
+		key: 'createBridge',
+		value: function createBridge() {
+
+			this.bridge = new _bridge2.default();
+			this.mesh.add(this.bridge.mesh);
+		}
+	}]);
+
+	return Island;
+}();
+
+exports.default = Island;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
 		value: true
 });
 
@@ -425,13 +538,17 @@ var Grassland = function () {
 				_classCallCheck(this, Grassland);
 
 				// set properties
-				// ...
 
-				// create an empty container that will hold the different parts of the grassland
+				this.materials = {
+						grass: new THREE.MeshPhongMaterial({ color: COLORS.greenLight }),
+						river: new THREE.MeshPhongMaterial({ color: COLORS.blue })
+				};
+
 				this.mesh = new THREE.Object3D();
 				this.meshes = [];
 
 				// init
+
 				this.init();
 		}
 
@@ -439,17 +556,6 @@ var Grassland = function () {
 				key: 'init',
 				value: function init() {
 						var _this = this;
-
-						this.materials = {
-								grass: new THREE.MeshPhongMaterial({
-										color: COLORS.greenLight,
-										flatShading: true
-								}),
-								river: new THREE.MeshPhongMaterial({
-										color: COLORS.blue,
-										flatShading: true
-								})
-						};
 
 						this.createGrass();
 						this.createRiver();
@@ -480,10 +586,10 @@ var Grassland = function () {
 						var geometry = new THREE.Geometry();
 						var meshes = [];
 
-						meshes.push(this.createGrassLeft());
-						meshes.push(this.createGrassBack());
-						meshes.push(this.createRiverBed());
-						meshes.push(this.createGrassRight());
+						meshes.push(this.addGrassLeft());
+						meshes.push(this.addGrassBack());
+						meshes.push(this.addRiverbed());
+						meshes.push(this.addGrassRight());
 
 						meshes.forEach(function (obj) {
 
@@ -496,8 +602,8 @@ var Grassland = function () {
 						this.meshes.push({ type: 'grass', mesh: mesh });
 				}
 		}, {
-				key: 'createGrassLeft',
-				value: function createGrassLeft() {
+				key: 'addGrassLeft',
+				value: function addGrassLeft() {
 
 						var geometry = new THREE.BoxGeometry(2, 0.2, 2);
 						var mesh = new THREE.Mesh(geometry);
@@ -507,8 +613,8 @@ var Grassland = function () {
 						return { type: 'grass', mesh: mesh };
 				}
 		}, {
-				key: 'createGrassBack',
-				value: function createGrassBack() {
+				key: 'addGrassBack',
+				value: function addGrassBack() {
 
 						var geometry = new THREE.BoxGeometry(1, 0.2, 0.2);
 						var mesh = new THREE.Mesh(geometry);
@@ -518,8 +624,8 @@ var Grassland = function () {
 						return { type: 'grass', mesh: mesh };
 				}
 		}, {
-				key: 'createRiverBed',
-				value: function createRiverBed() {
+				key: 'addRiverbed',
+				value: function addRiverbed() {
 
 						var geometry = new THREE.BoxGeometry(1, 0.05, 2);
 						var mesh = new THREE.Mesh(geometry);
@@ -529,8 +635,8 @@ var Grassland = function () {
 						return { type: 'grass', mesh: mesh };
 				}
 		}, {
-				key: 'createGrassRight',
-				value: function createGrassRight() {
+				key: 'addGrassRight',
+				value: function addGrassRight() {
 
 						var geometry = new THREE.BoxGeometry(1, 0.2, 2);
 						var mesh = new THREE.Mesh(geometry);
@@ -545,6 +651,122 @@ var Grassland = function () {
 }();
 
 exports.default = Grassland;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+		value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Bridge = function () {
+		function Bridge() {
+				_classCallCheck(this, Bridge);
+
+				// set properties
+
+				this.materials = {
+						wood: new THREE.MeshPhongMaterial({ color: COLORS.brown })
+				};
+
+				this.geometries = {
+						block: new THREE.BoxGeometry(0.04, 0.3, 0.04),
+						plank: new THREE.BoxGeometry(0.15, 0.02, 0.4),
+						rail: new THREE.BoxGeometry(1.2, 0.04, 0.04)
+				};
+
+				this.mesh = new THREE.Object3D();
+				this.meshes = [];
+
+				// init
+
+				this.init();
+		}
+
+		_createClass(Bridge, [{
+				key: 'init',
+				value: function init() {
+						var _this = this;
+
+						this.createBase();
+						this.createRails();
+
+						this.meshes.forEach(function (obj) {
+
+								obj.mesh.castShadow = true;
+								obj.mesh.receiveShadow = true;
+
+								_this.mesh.add(obj.mesh);
+						});
+				}
+		}, {
+				key: 'createBase',
+				value: function createBase() {
+
+						for (var i = 0; i < 6; i++) {
+
+								var mesh = new THREE.Mesh(this.geometries.plank, this.materials.wood);
+
+								mesh.position.set(0.2 * i, 0.21, 0.2);
+
+								this.meshes.push({ type: 'block', mesh: mesh });
+						}
+				}
+		}, {
+				key: 'createRails',
+				value: function createRails() {
+
+						var rail1 = this.addRail();
+						var rail2 = this.addRail();
+
+						rail2.mesh.position.set(0, 0, -0.4);
+
+						this.meshes.push(rail1);
+						this.meshes.push(rail2);
+				}
+		}, {
+				key: 'addRail',
+				value: function addRail() {
+
+						var geometry = new THREE.Geometry();
+						var meshes = [];
+
+						var block1 = new THREE.Mesh(this.geometries.block, this.materials.wood);
+						var block2 = new THREE.Mesh(this.geometries.block, this.materials.wood);
+						var rail = new THREE.Mesh(this.geometries.rail, this.materials.wood);
+
+						block1.position.set(-0.1, 0.35, 0.4);
+						block2.position.set(1.1, 0.35, 0.4);
+						rail.position.set(0.5, 0.42, 0.4);
+
+						meshes.push({ type: 'block', mesh: block1 });
+						meshes.push({ type: 'block', mesh: block2 });
+						meshes.push({ type: 'rail', mesh: rail });
+
+						meshes.forEach(function (obj) {
+
+								obj.mesh.updateMatrix();
+								geometry.merge(obj.mesh.geometry, obj.mesh.matrix);
+						});
+
+						var mesh = new THREE.Mesh(geometry, this.materials.wood);
+
+						return { type: 'rail', mesh: mesh };
+				}
+		}]);
+
+		return Bridge;
+}();
+
+exports.default = Bridge;
 
 /***/ })
 /******/ ]);

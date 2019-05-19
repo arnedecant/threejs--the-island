@@ -5,29 +5,22 @@ export default class Grassland {
 	constructor() {
 
 		// set properties
-		// ...
 
-		// create an empty container that will hold the different parts of the grassland
+		this.materials = {
+			grass: new THREE.MeshPhongMaterial({ color: COLORS.greenLight }),
+			river: new THREE.MeshPhongMaterial({ color: COLORS.blue })
+		}
+
 		this.mesh = new THREE.Object3D()
 		this.meshes = []
 
 		// init
+		
 		this.init()
 
 	}
 
 	init() {
-
-		this.materials = {
-			grass: new THREE.MeshPhongMaterial({
-				color: COLORS.greenLight,
-				flatShading: true
-			}),
-			river: new THREE.MeshPhongMaterial({
-				color: COLORS.blue,
-				flatShading: true
-			})
-		}
 
 		this.createGrass()
 		this.createRiver()
@@ -59,10 +52,10 @@ export default class Grassland {
 		let geometry = new THREE.Geometry()
 		let meshes = []
 
-		meshes.push(this.createGrassLeft())
-		meshes.push(this.createGrassBack())
-		meshes.push(this.createRiverBed())
-		meshes.push(this.createGrassRight())
+		meshes.push(this.addGrassLeft())
+		meshes.push(this.addGrassBack())
+		meshes.push(this.addRiverbed())
+		meshes.push(this.addGrassRight())
 
 		meshes.forEach((obj) => {
 
@@ -77,7 +70,7 @@ export default class Grassland {
 
 	}
 
-	createGrassLeft() {
+	addGrassLeft() {
 
 		let geometry = new THREE.BoxGeometry(2, 0.2, 2)
 		let mesh = new THREE.Mesh(geometry)
@@ -88,7 +81,7 @@ export default class Grassland {
 
 	}
 
-	createGrassBack() {
+	addGrassBack() {
 
 		let geometry = new THREE.BoxGeometry(1, 0.2, 0.2)
 		let mesh = new THREE.Mesh(geometry)
@@ -99,7 +92,7 @@ export default class Grassland {
 
 	}
 
-	createRiverBed() {
+	addRiverbed() {
 
 		let geometry = new THREE.BoxGeometry(1, 0.05, 2)
 		let mesh = new THREE.Mesh(geometry)
@@ -110,7 +103,7 @@ export default class Grassland {
 
 	}
 
-	createGrassRight() {
+	addGrassRight() {
 
 		let geometry = new THREE.BoxGeometry(1, 0.2, 2)
 		let mesh = new THREE.Mesh(geometry)
