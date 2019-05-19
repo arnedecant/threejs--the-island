@@ -109,7 +109,7 @@ var App = function () {
 						debug: true,
 						camera: {
 								zpf: 5, // zoom per frame
-								// default: { x: -5, y: 6, z: 8 },
+								// default: { x: -2.5, y: 3, z: 4 },
 								default: { x: -1.25, y: 1.5, z: 2 },
 								min: { x: 0, y: 0, z: 0 },
 								max: { x: 0, y: 1000, z: 1000 }
@@ -665,6 +665,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _three = __webpack_require__(5);
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Bridge = function () {
@@ -729,8 +731,13 @@ var Bridge = function () {
 
 						rail2.mesh.position.set(0, 0, -0.4);
 
+						// shadow1 = shadow(rail1.mesh, 0.2)
+						// shadow2 = shadow(rail2.mesh, 0.2)
+
 						this.meshes.push(rail1);
 						this.meshes.push(rail2);
+						// this.meshes.push(shadow1)
+						// this.meshes.push(shadow2)
 				}
 		}, {
 				key: 'addRail',
@@ -767,6 +774,28 @@ var Bridge = function () {
 }();
 
 exports.default = Bridge;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+		value: true
+});
+exports.shadow = shadow;
+function shadow(opacity, target) {
+
+		var materialShadow = new THREE.ShadowMaterial({ opacity: opacity });
+		var meshShadow = new THREE.Mesh(target.geometry, materialShadow);
+
+		meshShadow.position.set(target.position.x, target.position.y, target.position.z);
+		meshShadow.receiveShadow = true;
+
+		return meshShadow;
+}
 
 /***/ })
 /******/ ]);

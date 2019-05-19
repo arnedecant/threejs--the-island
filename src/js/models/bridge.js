@@ -1,5 +1,7 @@
 'use strict'
 
+import { shadow } from '../utilities/three.js'
+
 export default class Bridge {
 
 	constructor() {
@@ -20,7 +22,7 @@ export default class Bridge {
 		this.meshes = []
 
 		// init
-		
+
 		this.init()
 
 	}
@@ -62,8 +64,13 @@ export default class Bridge {
 
 		rail2.mesh.position.set(0, 0, -0.4)
 
+		// shadow1 = shadow(rail1.mesh, 0.2)
+		// shadow2 = shadow(rail2.mesh, 0.2)
+
 		this.meshes.push(rail1)
 		this.meshes.push(rail2)
+		// this.meshes.push(shadow1)
+		// this.meshes.push(shadow2)
 
 	}
 
