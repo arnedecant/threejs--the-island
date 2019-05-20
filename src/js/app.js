@@ -15,7 +15,7 @@ class App {
 			brown: 0xA98F78,
 			brownDark: 0x9A6169,
 			green: 0x65BB61,
-			greenLight: 0xABD66A, 
+			greenLight: 0xABD66A,
 			blue: 0x6BC6FF
 		}
 
@@ -25,8 +25,8 @@ class App {
 			debug: true,
 			camera: {
 				zpf: 5, // zoom per frame
-				// default: { x: -2.5, y: 3, z: 4 },
-				default: { x: -1.25, y: 1.5, z: 2 },
+				default: { x: -2.5, y: 3, z: 4 },
+				// default: { x: -1.25, y: 1.5, z: 2 },
 				min: { x: 0, y: 0, z: 0 },
 				max: { x: 0, y: 1000, z: 1000 }
 			}
@@ -160,7 +160,7 @@ class App {
 		this.renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1)
 
 		// append to DOM
-		
+
 		this.container = document.querySelector('#world')
 		this.container.appendChild(this.renderer.domElement)
 
@@ -169,23 +169,23 @@ class App {
 	createLights() {
 
 		// create a new ambient light
-		
+
 		this.light = new THREE.AmbientLight(0xffffff, 0.5)
 
 		// create a new shadow light
-		
+
 		this.shadowLight = new THREE.DirectionalLight(0xffffff, 0.5)
 		this.shadowLight.position.set(200, 200, 200)
 		this.shadowLight.castShadow = true
 
 		// create a new back light
-		
+
 		this.backLight = new THREE.DirectionalLight(0xffffff, 0.2)
 		this.backLight.position.set(-100, 200, 50)
 		this.backLight.castShadow = true
 
 		// add lights to the scene
-		
+
 		this.scene.add(this.light)
 		this.scene.add(this.shadowLight)
 		this.scene.add(this.backLight)
@@ -195,11 +195,11 @@ class App {
 	createIsland() {
 
 		// create new object
-		
+
 		this.island = new Island()
 
 		// add the island to the scene
-		
+
 		this.scene.add(this.island.mesh)
 		this.scene.updateMatrixWorld(true)
 
@@ -208,27 +208,27 @@ class App {
 	updateZoom() {
 
 		// no need to zoom when scrollSpeed hasn't been updated
-		
+
 		if (this.scrollSpeed == 0) return
 
 		// zoom per frame
-		
+
 		let zpf = this.config.camera.zpf
 
 		// min & max values
-		
+
 		let zMin = this.config.camera.min.z,
 			zMax = this.config.camera.max.z
 
 		// smoother scrolling at the end of the animation
 		// prevents zooms very small values, for example 1.2 ...
-		
+
 		if (Math.abs(this.scrollSpeed) < (2 * zpf)) {
 			zpf = zpf / 2
 		}
 
 		// redefine the zoom per frame
-		
+
 		if (this.scrollSpeed > 0) {
 
 			// zoom out
@@ -255,16 +255,16 @@ class App {
 		}
 
 		// get new z-pos
-		
+
 		let z = this.camera.position.z + zpf
 
 		// set boundaries for z-pos
-		
+
 		z = (z > zMin) ? z : zMin
 		z = (z < zMax) ? z : zMax
 
 		// apply position if it's above threshold
-		
+
 		this.camera.position.z = z
 
 	}
@@ -273,7 +273,7 @@ class App {
 
 		// only store the scroll value
 		// zoom will be handled in the render function
-		
+
 		this.scrollSpeed = e.deltaY / 2
 
 	}
@@ -281,12 +281,12 @@ class App {
 	mousemove(e) {
 
 		// convert mouse position to a normalized value between -1 and 1
-		
+
 		let tx = -1 + (e.clientX / this.width) * 2		// x-axis
 		let ty = 1 - (e.clientY / this.height) * 2		// y-axis
 
 		// apply converted values
-		
+
 		this.mouse = {
 			x: tx,
 			y: ty
@@ -309,16 +309,16 @@ class App {
 	resize(e) {
 
 		// set canvas dimensions
-		
+
 		this.width = window.innerWidth;
 		this.height = window.innerHeight;
 
 		// set renderer dimensions
-		
+
 		this.renderer.setSize(this.width, this.height)
 
 		// set camera
-		
+
 		this.aspectRatio = this.width / this.height
 		this.camera.aspect = this.aspectRatio
 		this.camera.updateProjectionMatrix()
@@ -332,15 +332,15 @@ class App {
 	render() {
 
 		// update zoom
-		
+
 		this.updateZoom()
 
 		// render
-  		
+
   		this.renderer.render(this.scene, this.camera);
 
 		// add self to the requestAnimationFrame
-		
+
 		window.requestAnimationFrame(this.render.bind(this))
 
 	}

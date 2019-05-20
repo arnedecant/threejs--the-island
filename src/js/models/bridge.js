@@ -69,6 +69,7 @@ export default class Bridge {
 
 		this.meshes.push(rail1)
 		this.meshes.push(rail2)
+
 		// this.meshes.push(shadow1)
 		// this.meshes.push(shadow2)
 
