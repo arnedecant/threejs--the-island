@@ -22,7 +22,7 @@ class App {
 		// set properties
 
 		this.config = {
-			debug: true,
+			debug: false,
 			camera: {
 				zpf: 5, // zoom per frame
 				default: { x: -2.5, y: 3, z: 4 },
@@ -34,7 +34,8 @@ class App {
 
 		this.zoom = 1
 		this.scrollSpeed = 0
-		this.mouse = { x: 0, y: 0 }
+		this.mouse = new THREE.Vector2()
+		this.raycaster = new THREE.Raycaster()
 
 		// init
 
@@ -43,10 +44,6 @@ class App {
 	}
 
 	init() {
-
-		// skip if there's no THREE
-
-		if (!THREE) return
 
 		// set up scene, camera and renderer
 
@@ -63,6 +60,7 @@ class App {
 		// add events
 
 		window.addEventListener('resize', this.resize.bind(this), false)
+		window.addEventListener('click', this.click.bind(this), false)
 		window.addEventListener('mousemove', this.mousemove.bind(this), false)
 		window.addEventListener('mousedown', this.mousedown.bind(this), false)
 		window.addEventListener('mouseup', this.mouseup.bind(this), false)
@@ -133,6 +131,8 @@ class App {
 		this.camera.position.x = this.config.camera.default.x
 		this.camera.position.y = this.config.camera.default.y
 		this.camera.position.z = this.config.camera.default.z
+
+		// point the camera to the center
 
 		this.camera.lookAt(new THREE.Vector3(0,0,0))
 
@@ -278,19 +278,44 @@ class App {
 
 	}
 
+	click(e) {
+
+		e.preventDefault()
+
+		// update the picking ray with the camera and mouse position
+
+		this.raycaster.setFromCamera(this.mouse, this.camera)
+
+		// calculate objects intersecting the picking ray
+
+		console.log(this.island.mesh.children)
+
+		let intersects = this.raycaster.intersectObjects(this.island.mesh.children)
+		// let intersects = this.raycaster.intersectObjects(this.scene.children, true)
+
+		console.log(intersects)
+
+		// intersects.forEach((intersect) => {
+
+		// 	if (intersect.object.type != 'Object3D') return
+
+		// 	console.log(intersect.object)
+
+		// })
+
+	}
+
 	mousemove(e) {
 
-		// convert mouse position to a normalized value between -1 and 1
+		e.preventDefault()
 
-		let tx = -1 + (e.clientX / this.width) * 2		// x-axis
-		let ty = 1 - (e.clientY / this.height) * 2		// y-axis
+		// calculate mouse position in normalized device coordinates
+		// (-1 to +1) for both components
 
-		// apply converted values
+		this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1
+		this.mouse.y = - (e.clientY / window.innerHeight) * 2 + 1
 
-		this.mouse = {
-			x: tx,
-			y: ty
-		}
+		// console.log({ x: this.mouse.x, y: this.mouse.y })
 
 	}
 

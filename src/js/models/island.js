@@ -13,6 +13,7 @@ export default class Island {
 
 		this.materials = {}
 		this.mesh = new THREE.Object3D()
+		this.mesh.name = 'island'
 		this.meshes = []
 
 		// init

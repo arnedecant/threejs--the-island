@@ -12,6 +12,7 @@ export default class Grassland {
 		}
 
 		this.mesh = new THREE.Object3D()
+		this.mesh.name = 'grassland'
 		this.meshes = []
 
 		// init
@@ -42,6 +43,7 @@ export default class Grassland {
 		let mesh = new THREE.Mesh(geometry, this.materials.river)
 
 		mesh.position.set(0.5, 0.1, 0)
+		mesh.name = 'grassland--river'
 
 		this.meshes.push({type: 'river', mesh: mesh})
 
@@ -65,6 +67,7 @@ export default class Grassland {
 		})
 
 		let mesh = new THREE.Mesh(geometry, this.materials.grass)
+		mesh.name = 'grassland--grass'
 
 		this.meshes.push({ type: 'grass', mesh: mesh })
 

@@ -19,6 +19,7 @@ export default class Tree {
 		}
 
 		this.mesh = new THREE.Object3D()
+		this.mesh.name = 'tree'
 		this.meshes = []
 
 		// init
@@ -47,6 +48,7 @@ export default class Tree {
 
 		let mesh = new THREE.Mesh(this.geometries.trunk, this.materials.trunk)
   		mesh.position.set(this.position.x, 0.275, this.position.z)
+  		mesh.name = 'tree--trunk'
 
 		this.meshes.push({ type: 'trunk', mesh: mesh })
 
@@ -56,6 +58,7 @@ export default class Tree {
 
 		let mesh = new THREE.Mesh(this.geometries.leaves, this.materials.leaves)
   		mesh.position.set(this.position.x, 0.55, this.position.z)
+  		mesh.name = 'tree--leaves'
 
 		this.meshes.push({ type: 'leaves', mesh: mesh })
 
