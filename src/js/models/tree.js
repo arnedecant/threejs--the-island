@@ -2,11 +2,12 @@
 
 export default class Tree {
 
-	constructor(x = 0, y = 0, z = 0) {
+	constructor(position = { x: 0, y: 0, z: 0 }, scale = 1) {
 
 		// set properties
 
-		this.position = { x, y, z }
+		this.position = position
+		this.scale = scale
 
 		this.materials = {
 			trunk: new THREE.MeshLambertMaterial({ color: COLORS.brownDark }),
@@ -42,12 +43,15 @@ export default class Tree {
 
 		})
 
+		let { x, y, z } = this.position
+		this.mesh.position.set(x, y, z)
+		this.mesh.scale.set(this.scale, this.scale, this.scale)
+
 	}
 
 	createTrunk() {
 
 		let mesh = new THREE.Mesh(this.geometries.trunk, this.materials.trunk)
-  		mesh.position.set(this.position.x, 0.275, this.position.z)
   		mesh.name = 'tree--trunk'
 
 		this.meshes.push({ type: 'trunk', mesh: mesh })
@@ -57,7 +61,7 @@ export default class Tree {
 	createLeaves() {
 
 		let mesh = new THREE.Mesh(this.geometries.leaves, this.materials.leaves)
-  		mesh.position.set(this.position.x, 0.55, this.position.z)
+  		mesh.position.y = 0.275
   		mesh.name = 'tree--leaves'
 
 		this.meshes.push({ type: 'leaves', mesh: mesh })

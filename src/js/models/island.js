@@ -44,21 +44,27 @@ export default class Island {
 
 	}
 
-	createTrees(amount) {
+	createTrees(amount = 10) {
 
 		this.trees = []
 
 		for (let i = 0; i < amount; i++) {
 
-			// x: random between (-1.75 and -0.5) and (1.5 and 1.75)
-			// z: between (-0.75 and 0.75)
+			// x: random - between (-1.75 and -0.5) and (1.5 and 1.75)
+			// y: fixed  - 0.275
+			// z: random - between (-0.75 and 0.75)
 
-			let x = random(-1.75, 1.75)
-			let z = random(-0.75, 0.75)
+			let pos = {
+				x: random(-1.75, 1.75),
+				y: 0.275,
+				z: random(-0.75, 0.75)
+			}
 
-			while (x > -0.5 && x < 1.5) x = random(-1.75, 1.75)
+			let scale = random(0.75, 1.25)
 
-			let tree = new Tree(x, 0.275, z)
+			while (pos.x > -0.5 && pos.x < 1.5) pos.x = random(-1.75, 1.75)
+
+			let tree = new Tree(pos, scale)
 
 			this.trees.push(tree)
 			this.mesh.add(tree.mesh)

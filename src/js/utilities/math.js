@@ -11,8 +11,8 @@ export function normalize(v, vmin, vmax, tmin, tmax) {
 	return tv;
 
 }
-export function random(min, max, decimals = 2) {
+export function random(min, max) {
 
-	return (Math.random() * (max - min) + min).toFixed(decimals)
+	return Math.random() * (max - min) + min
 
 }
