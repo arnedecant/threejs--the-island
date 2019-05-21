@@ -98,7 +98,7 @@ function random(min, max) {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+		value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // -------------------------------------------------------------------
@@ -119,372 +119,377 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var App = function () {
-	function App() {
-		_classCallCheck(this, App);
+		function App() {
+				_classCallCheck(this, App);
 
-		window.COLORS = {
-			cyan: 0x248079,
-			brown: 0xA98F78,
-			brownDark: 0x9A6169,
-			green: 0x65BB61,
-			greenLight: 0xABD66A,
-			blue: 0x6BC6FF
+				window.COLORS = {
+						cyan: 0x248079,
+						brown: 0xA98F78,
+						brownDark: 0x9A6169,
+						green: 0x65BB61,
+						greenLight: 0xABD66A,
+						blue: 0x6BC6FF
 
-			// set properties
+						// set properties
 
-		};this.config = {
-			debug: false,
-			camera: {
-				zpf: 5, // zoom per frame
-				// default: { x: -2.5, y: 3, z: 4 },
-				// default: { x: -1.25, y: 1.5, z: 2 },
-				default: { x: -2.5, y: 3, z: 2 },
-				min: { x: 0, y: 0, z: 0 },
-				max: { x: 0, y: 1000, z: 1000 }
-			}
-		};
+				};this.config = {
+						debug: false,
+						camera: {
+								zpf: 5, // zoom per frame
+								default: { x: -2.5, y: 3, z: 4 },
+								// default: { x: -1.25, y: 1.5, z: 2 },
+								// default: { x: -2.5, y: 3, z: 2 },
+								min: { x: 0, y: 0, z: 0 },
+								max: { x: 0, y: 1000, z: 1000 }
+						}
+				};
 
-		this.zoom = 1;
-		this.scrollSpeed = 0;
-		this.mouse = new THREE.Vector2();
-		this.raycaster = new THREE.Raycaster();
+				this.zoom = 1;
+				this.scrollSpeed = 0;
+				this.mouse = new THREE.Vector2();
+				this.raycaster = new THREE.Raycaster();
 
-		// init
+				// init
 
-		this.init();
-	}
-
-	_createClass(App, [{
-		key: 'init',
-		value: function init() {
-
-			// set up scene, camera and renderer
-
-			this.createScene();
-
-			// add lights
-
-			this.createLights();
-
-			// add objects
-
-			this.createIsland();
-
-			// add events
-
-			window.addEventListener('resize', this.resize.bind(this), false);
-			window.addEventListener('click', this.click.bind(this), false);
-			window.addEventListener('mousemove', this.mousemove.bind(this), false);
-			window.addEventListener('mousedown', this.mousedown.bind(this), false);
-			window.addEventListener('mouseup', this.mouseup.bind(this), false);
-			window.addEventListener('mousewheel', this.scroll.bind(this), { passive: true });
-
-			// render
-
-			this.render();
+				this.init();
 		}
-	}, {
-		key: 'createScene',
-		value: function createScene() {
 
-			// set width & height
+		_createClass(App, [{
+				key: 'init',
+				value: function init() {
 
-			this.height = window.innerHeight;
-			this.width = window.innerWidth;
+						// set up scene, camera and renderer
 
-			// create new scene
+						this.createScene();
 
-			this.scene = new THREE.Scene();
+						// add lights
 
-			// add fog to the scene
+						this.createLights();
 
-			this.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
+						// add objects
 
-			// create the camera
+						this.createIsland();
 
-			this.createCamera();
+						// add events
 
-			// create the renderer
+						window.addEventListener('resize', this.resize.bind(this), false);
+						window.addEventListener('click', this.click.bind(this), false);
+						window.addEventListener('mousemove', this.mousemove.bind(this), false);
+						window.addEventListener('mousedown', this.mousedown.bind(this), false);
+						window.addEventListener('mouseup', this.mouseup.bind(this), false);
+						window.addEventListener('mousewheel', this.scroll.bind(this), { passive: true });
 
-			this.createRenderer();
+						// render
 
-			// add debug helpers
-
-			if (this.config.debug) this.initDebug();
-		}
-	}, {
-		key: 'initDebug',
-		value: function initDebug() {
-
-			var axesHelper = new THREE.AxesHelper(5);
-			this.scene.add(axesHelper);
-		}
-	}, {
-		key: 'createCamera',
-		value: function createCamera() {
-
-			// set values to init the camera
-
-			this.aspectRatio = this.width / this.height;
-			this.fieldOfView = 60;
-			this.nearPlane = 1;
-			this.farPlane = 10000;
-
-			// create a new camera
-
-			this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.aspectRatio, this.nearPlane, this.farPlane);
-
-			// set camera position
-
-			this.camera.position.x = this.config.camera.default.x;
-			this.camera.position.y = this.config.camera.default.y;
-			this.camera.position.z = this.config.camera.default.z;
-
-			// point the camera to the center
-
-			this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-		}
-	}, {
-		key: 'createRenderer',
-		value: function createRenderer() {
-
-			// create new renderer
-
-			this.renderer = new THREE.WebGLRenderer({
-				alpha: true,
-				antialias: true
-			});
-
-			// set the size
-
-			this.renderer.setSize(this.width, this.height);
-
-			// enable shadowMap
-
-			this.renderer.shadowMap.enabled = true;
-
-			// support for HDPI displays
-
-			this.renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
-
-			// append to DOM
-
-			this.container = document.querySelector('#world');
-			this.container.appendChild(this.renderer.domElement);
-		}
-	}, {
-		key: 'createLights',
-		value: function createLights() {
-
-			// create a new ambient light
-
-			this.light = new THREE.AmbientLight(0xffffff, 0.5);
-
-			// create a new shadow light
-
-			this.shadowLight = new THREE.DirectionalLight(0xffffff, 0.5);
-			this.shadowLight.position.set(200, 200, 200);
-			this.shadowLight.castShadow = true;
-
-			// create a new back light
-
-			this.backLight = new THREE.DirectionalLight(0xffffff, 0.2);
-			this.backLight.position.set(-100, 200, 50);
-			this.backLight.castShadow = true;
-
-			// add lights to the scene
-
-			this.scene.add(this.light);
-			this.scene.add(this.shadowLight);
-			this.scene.add(this.backLight);
-		}
-	}, {
-		key: 'createIsland',
-		value: function createIsland() {
-
-			// create new object
-
-			this.island = new _island2.default();
-
-			// add the island to the scene
-
-			this.scene.add(this.island.mesh);
-			this.scene.updateMatrixWorld(true);
-		}
-	}, {
-		key: 'updateZoom',
-		value: function updateZoom() {
-
-			// no need to zoom when scrollSpeed hasn't been updated
-
-			if (this.scrollSpeed == 0) return;
-
-			// zoom per frame
-
-			var zpf = this.config.camera.zpf;
-
-			// min & max values
-
-			var zMin = this.config.camera.min.z,
-			    zMax = this.config.camera.max.z;
-
-			// smoother scrolling at the end of the animation
-			// prevents zooms very small values, for example 1.2 ...
-
-			if (Math.abs(this.scrollSpeed) < 2 * zpf) {
-				zpf = zpf / 2;
-			}
-
-			// redefine the zoom per frame
-
-			if (this.scrollSpeed > 0) {
-
-				// zoom out
-
-				if (this.scrollSpeed < zpf) {
-					zpf = this.scrollSpeed;
-					this.scrollSpeed = 0;
-				} else {
-					this.scrollSpeed -= zpf;
+						this.render();
 				}
-			} else if (this.scrollSpeed < 0) {
+		}, {
+				key: 'createScene',
+				value: function createScene() {
 
-				// zoom in
+						// set width & height
 
-				if (this.scrollSpeed > -zpf) {
-					zpf = this.scrollSpeed;
-					this.scrollSpeed = 0;
-				} else {
-					this.scrollSpeed += zpf;
-					zpf = -zpf;
+						this.height = window.innerHeight;
+						this.width = window.innerWidth;
+
+						// create new scene
+
+						this.scene = window.SCENE = new THREE.Scene();
+
+						// add fog to the scene
+
+						this.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
+
+						// create the camera
+
+						this.createCamera();
+
+						// create the renderer
+
+						this.createRenderer();
+
+						// add debug helpers
+
+						if (this.config.debug) this.initDebug();
 				}
-			}
+		}, {
+				key: 'initDebug',
+				value: function initDebug() {
 
-			// get new z-pos
+						var axesHelper = new THREE.AxesHelper(5);
+						this.scene.add(axesHelper);
+				}
+		}, {
+				key: 'createCamera',
+				value: function createCamera() {
 
-			var z = this.camera.position.z + zpf;
+						// set values to init the camera
 
-			// set boundaries for z-pos
+						this.aspectRatio = this.width / this.height;
+						this.fieldOfView = 60;
+						this.nearPlane = 1;
+						this.farPlane = 10000;
 
-			z = z > zMin ? z : zMin;
-			z = z < zMax ? z : zMax;
+						// create a new camera
 
-			// apply position if it's above threshold
+						this.camera = new THREE.PerspectiveCamera(this.fieldOfView, this.aspectRatio, this.nearPlane, this.farPlane);
 
-			this.camera.position.z = z;
-		}
-	}, {
-		key: 'scroll',
-		value: function scroll(e) {
+						// set camera position
 
-			// only store the scroll value
-			// zoom will be handled in the render function
+						this.camera.position.x = this.config.camera.default.x;
+						this.camera.position.y = this.config.camera.default.y;
+						this.camera.position.z = this.config.camera.default.z;
 
-			this.scrollSpeed = e.deltaY / 2;
-		}
-	}, {
-		key: 'click',
-		value: function click(e) {
-			var _this = this;
+						// point the camera to the center
 
-			e.preventDefault();
+						this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+				}
+		}, {
+				key: 'createRenderer',
+				value: function createRenderer() {
 
-			// update the picking ray with the camera and mouse position
+						// create new renderer
 
-			this.raycaster.setFromCamera(this.mouse, this.camera);
+						this.renderer = new THREE.WebGLRenderer({
+								alpha: true,
+								antialias: true
+						});
 
-			// calculate objects intersecting the picking ray
+						// set the size
 
-			// let intersects = this.raycaster.intersectObjects(this.island.mesh.children)
-			var intersects = this.raycaster.intersectObjects(this.scene.children, true);
+						this.renderer.setSize(this.width, this.height);
 
-			intersects.forEach(function (intersect) {
+						// enable shadowMap
 
-				var obj = intersect.object.parent;
-				if (obj.name != 'tree') return;
+						this.renderer.shadowMap.enabled = true;
 
-				var tree = _this.island.trees.find(function (el) {
-					return el.uuid == obj.uuid;
-				});
+						// support for HDPI displays
 
-				alert('Tree clicked: ' + tree.uuid);
+						this.renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
 
-				// let index = this.island.trees.findIndex(tree)
+						// append to DOM
 
-				// tree.despawn()
+						this.container = document.querySelector('#world');
+						this.container.appendChild(this.renderer.domElement);
+				}
+		}, {
+				key: 'createLights',
+				value: function createLights() {
 
-				// this.scene.remove(tree.mesh)
-				// this.island.trees.splice(index, 1)
-			});
-		}
-	}, {
-		key: 'mousemove',
-		value: function mousemove(e) {
+						// create a new ambient light
 
-			e.preventDefault();
+						this.light = new THREE.AmbientLight(0xffffff, 0.5);
 
-			// calculate mouse position in normalized device coordinates
-			// (-1 to +1) for both components
+						// create a new shadow light
 
-			this.mouse.x = e.clientX / window.innerWidth * 2 - 1;
-			this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+						this.shadowLight = new THREE.DirectionalLight(0xffffff, 0.5);
+						this.shadowLight.position.set(200, 200, 200);
+						this.shadowLight.castShadow = true;
 
-			// console.log({ x: this.mouse.x, y: this.mouse.y })
-		}
-	}, {
-		key: 'mousedown',
-		value: function mousedown(e) {
+						// create a new back light
 
-			this.shooting = true;
-		}
-	}, {
-		key: 'mouseup',
-		value: function mouseup(e) {
+						this.backLight = new THREE.DirectionalLight(0xffffff, 0.2);
+						this.backLight.position.set(-100, 200, 50);
+						this.backLight.castShadow = true;
 
-			this.shooting = false;
-		}
-	}, {
-		key: 'resize',
-		value: function resize(e) {
+						// add lights to the scene
 
-			// set canvas dimensions
+						this.scene.add(this.light);
+						this.scene.add(this.shadowLight);
+						this.scene.add(this.backLight);
+				}
+		}, {
+				key: 'createIsland',
+				value: function createIsland() {
 
-			this.width = window.innerWidth;
-			this.height = window.innerHeight;
+						// create new object
 
-			// set renderer dimensions
+						this.island = new _island2.default();
 
-			this.renderer.setSize(this.width, this.height);
+						// add the island to the scene
 
-			// set camera
+						this.scene.add(this.island.mesh);
+						this.scene.updateMatrixWorld(true);
+				}
+		}, {
+				key: 'updateZoom',
+				value: function updateZoom() {
 
-			this.aspectRatio = this.width / this.height;
-			this.camera.aspect = this.aspectRatio;
-			this.camera.updateProjectionMatrix();
+						// no need to zoom when scrollSpeed hasn't been updated
 
-			// render
+						if (this.scrollSpeed == 0) return;
 
-			// this.render()
-		}
-	}, {
-		key: 'render',
-		value: function render() {
+						// zoom per frame
 
-			// update zoom
+						var zpf = this.config.camera.zpf;
 
-			this.updateZoom();
+						// min & max values
 
-			// render
+						var zMin = this.config.camera.min.z,
+						    zMax = this.config.camera.max.z;
 
-			this.renderer.render(this.scene, this.camera);
+						// smoother scrolling at the end of the animation
+						// prevents zooms very small values, for example 1.2 ...
 
-			// add self to the requestAnimationFrame
+						if (Math.abs(this.scrollSpeed) < 2 * zpf) {
+								zpf = zpf / 2;
+						}
 
-			window.requestAnimationFrame(this.render.bind(this));
-		}
-	}]);
+						// redefine the zoom per frame
 
-	return App;
+						if (this.scrollSpeed > 0) {
+
+								// zoom out
+
+								if (this.scrollSpeed < zpf) {
+										zpf = this.scrollSpeed;
+										this.scrollSpeed = 0;
+								} else {
+										this.scrollSpeed -= zpf;
+								}
+						} else if (this.scrollSpeed < 0) {
+
+								// zoom in
+
+								if (this.scrollSpeed > -zpf) {
+										zpf = this.scrollSpeed;
+										this.scrollSpeed = 0;
+								} else {
+										this.scrollSpeed += zpf;
+										zpf = -zpf;
+								}
+						}
+
+						// get new z-pos
+
+						var z = this.camera.position.z + zpf;
+
+						// set boundaries for z-pos
+
+						z = z > zMin ? z : zMin;
+						z = z < zMax ? z : zMax;
+
+						// apply position if it's above threshold
+
+						this.camera.position.z = z;
+				}
+		}, {
+				key: 'scroll',
+				value: function scroll(e) {
+
+						// only store the scroll value
+						// zoom will be handled in the render function
+
+						this.scrollSpeed = e.deltaY / 2;
+				}
+		}, {
+				key: 'click',
+				value: function click(e) {
+						var _this = this;
+
+						e.preventDefault();
+
+						// update the picking ray with the camera and mouse position
+
+						this.raycaster.setFromCamera(this.mouse, this.camera);
+
+						// calculate objects intersecting the picking ray
+
+						// let intersects = this.raycaster.intersectObjects(this.island.mesh.children)
+						var intersects = this.raycaster.intersectObjects(this.scene.children, true);
+						var foundTree = false;
+
+						console.log(intersects);
+
+						intersects.forEach(function (intersect) {
+
+								var obj = intersect.object.parent;
+								if (obj.name != 'tree' || foundTree) return;
+
+								foundTree = true;
+
+								var tree = _this.island.trees.find(function (t) {
+										return t.uuid == obj.uuid;
+								});
+								var index = _this.island.trees.findIndex(function (t) {
+										return t.uuid == obj.uuid;
+								});
+
+								tree.despawn();
+
+								SCENE.remove(SCENE.getObjectById(tree.mesh.id));
+								_this.island.trees.splice(index, 1);
+						});
+				}
+		}, {
+				key: 'mousemove',
+				value: function mousemove(e) {
+
+						e.preventDefault();
+
+						// calculate mouse position in normalized device coordinates
+						// (-1 to +1) for both components
+
+						this.mouse.x = e.clientX / window.innerWidth * 2 - 1;
+						this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+						// console.log({ x: this.mouse.x, y: this.mouse.y })
+				}
+		}, {
+				key: 'mousedown',
+				value: function mousedown(e) {
+
+						this.shooting = true;
+				}
+		}, {
+				key: 'mouseup',
+				value: function mouseup(e) {
+
+						this.shooting = false;
+				}
+		}, {
+				key: 'resize',
+				value: function resize(e) {
+
+						// set canvas dimensions
+
+						this.width = window.innerWidth;
+						this.height = window.innerHeight;
+
+						// set renderer dimensions
+
+						this.renderer.setSize(this.width, this.height);
+
+						// set camera
+
+						this.aspectRatio = this.width / this.height;
+						this.camera.aspect = this.aspectRatio;
+						this.camera.updateProjectionMatrix();
+
+						// render
+
+						// this.render()
+				}
+		}, {
+				key: 'render',
+				value: function render() {
+
+						// update zoom
+
+						this.updateZoom();
+
+						// render
+
+						this.island.render();
+						this.renderer.render(this.scene, this.camera);
+
+						// add self to the requestAnimationFrame
+
+						window.requestAnimationFrame(this.render.bind(this));
+				}
+		}]);
+
+		return App;
 }();
 
 exports.default = new App();
@@ -497,7 +502,7 @@ exports.default = new App();
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+		value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -514,6 +519,10 @@ var _tree = __webpack_require__(6);
 
 var _tree2 = _interopRequireDefault(_tree);
 
+var _drop = __webpack_require__(7);
+
+var _drop2 = _interopRequireDefault(_drop);
+
 var _math = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -521,76 +530,117 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Island = function () {
-	function Island() {
-		_classCallCheck(this, Island);
+		function Island() {
+				_classCallCheck(this, Island);
 
-		// set properties
+				// set properties
 
-		this.materials = {};
-		this.mesh = new THREE.Object3D();
-		this.mesh.name = 'island';
-		this.meshes = [];
+				this.materials = {};
+				this.mesh = new THREE.Object3D();
+				this.mesh.name = 'island';
+				this.meshes = [];
+				this.drops = [];
+				this.count = 0;
+				this.delay = 200;
 
-		// init
+				// init
 
-		this.init();
-	}
-
-	_createClass(Island, [{
-		key: 'init',
-		value: function init() {
-
-			this.createGrassland();
-			this.createBridge();
-			this.createTrees(10);
+				this.init();
 		}
-	}, {
-		key: 'createGrassland',
-		value: function createGrassland() {
 
-			this.grassland = new _grassland2.default();
-			this.mesh.add(this.grassland.mesh);
-		}
-	}, {
-		key: 'createBridge',
-		value: function createBridge() {
+		_createClass(Island, [{
+				key: 'init',
+				value: function init() {
 
-			this.bridge = new _bridge2.default();
-			this.mesh.add(this.bridge.mesh);
-		}
-	}, {
-		key: 'createTrees',
-		value: function createTrees() {
-			var amount = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+						var amount = 10;
+						var bridgeDelay = (amount + 1) * this.delay;
+
+						this.createGrassland();
+						this.createTrees(amount);
+						this.createBridge(bridgeDelay);
+				}
+		}, {
+				key: 'createGrassland',
+				value: function createGrassland() {
+
+						this.grassland = new _grassland2.default();
+						this.mesh.add(this.grassland.mesh);
+				}
+		}, {
+				key: 'createBridge',
+				value: function createBridge() {
+						var _this = this;
+
+						var delay = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
 
-			this.trees = [];
+						setTimeout(function () {
 
-			for (var i = 0; i < amount; i++) {
+								_this.bridge = new _bridge2.default();
+								_this.mesh.add(_this.bridge.mesh);
+						}, delay);
+				}
+		}, {
+				key: 'createTrees',
+				value: function createTrees() {
+						var _this2 = this;
 
-				// x: random - between (-1.75 and -0.5) and (1.5 and 1.75)
-				// y: fixed  - 0.275
-				// z: random - between (-0.75 and 0.75)
+						var amount = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
 
-				var pos = {
-					x: (0, _math.random)(-1.75, 1.75),
-					y: 0.275,
-					z: (0, _math.random)(-0.75, 0.75)
-				};
 
-				var scale = (0, _math.random)(0.75, 1.25);
+						this.trees = [];
 
-				while (pos.x > -0.5 && pos.x < 1.5) {
-					pos.x = (0, _math.random)(-1.75, 1.75);
-				}var tree = new _tree2.default(pos, scale);
+						for (var i = 0; i < amount; i++) {
 
-				this.trees.push(tree);
-				this.mesh.add(tree.mesh);
-			}
-		}
-	}]);
+								setTimeout(function () {
 
-	return Island;
+										// x: random - between (-1.75 and -0.5) and (1.5 and 1.75)
+										// y: fixed  - 0.275
+										// z: random - between (-0.75 and 0.75)
+
+										var pos = {
+												x: (0, _math.random)(-1.75, 1.75),
+												y: 0.275,
+												z: (0, _math.random)(-0.75, 0.75)
+										};
+
+										var scale = (0, _math.random)(0.75, 1.25);
+
+										while (pos.x > -0.5 && pos.x < 1.5) {
+												pos.x = (0, _math.random)(-1.75, 1.75);
+										}var tree = new _tree2.default(pos, scale);
+
+										_this2.trees.push(tree);
+										SCENE.add(tree.mesh);
+								}, this.delay * i);
+						}
+				}
+		}, {
+				key: 'render',
+				value: function render() {
+						var _this3 = this;
+
+						if (this.count % 5 == 0) {
+								for (var i = 0; i < 5; i++) {
+										this.drops.push(new _drop2.default());
+								}
+						}
+
+						this.count++;
+
+						this.drops.forEach(function (drop, index) {
+
+								drop.update();
+
+								if (drop.lifespan > 0) return;
+
+								SCENE.remove(SCENE.getObjectById(drop.mesh.id));
+								_this3.drops.splice(index, 1);
+						});
+				}
+		}]);
+
+		return Island;
 }();
 
 exports.default = Island;
@@ -603,7 +653,7 @@ exports.default = Island;
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+		value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -611,123 +661,123 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Grassland = function () {
-	function Grassland() {
-		_classCallCheck(this, Grassland);
+		function Grassland() {
+				_classCallCheck(this, Grassland);
 
-		// set properties
+				// set properties
 
-		this.materials = {
-			grass: new THREE.MeshPhongMaterial({ color: COLORS.greenLight }),
-			river: new THREE.MeshPhongMaterial({ color: COLORS.blue, transparent: true, opacity: 0.8 })
-		};
+				this.materials = {
+						grass: new THREE.MeshPhongMaterial({ color: COLORS.greenLight }),
+						water: new THREE.MeshPhongMaterial({ color: COLORS.blue, transparent: true, opacity: 0.8 })
+				};
 
-		this.mesh = new THREE.Object3D();
-		this.mesh.name = 'grassland';
-		this.meshes = [];
+				this.mesh = new THREE.Object3D();
+				this.mesh.name = 'grassland';
+				this.meshes = [];
 
-		// init
+				// init
 
-		this.init();
-	}
-
-	_createClass(Grassland, [{
-		key: 'init',
-		value: function init() {
-			var _this = this;
-
-			this.createGrass();
-			this.createRiver();
-
-			this.meshes.forEach(function (obj) {
-
-				obj.mesh.castShadow = true;
-				obj.mesh.receiveShadow = true;
-
-				_this.mesh.add(obj.mesh);
-			});
+				this.init();
 		}
-	}, {
-		key: 'createRiver',
-		value: function createRiver() {
 
-			var geometry = new THREE.BoxGeometry(1, 0.15, 2);
-			var mesh = new THREE.Mesh(geometry, this.materials.river);
+		_createClass(Grassland, [{
+				key: 'init',
+				value: function init() {
+						var _this = this;
 
-			mesh.position.set(0.5, 0.1, 0);
-			mesh.name = 'grassland--river';
+						this.createGrass();
+						this.createRiver();
 
-			this.meshes.push({ type: 'river', mesh: mesh });
-		}
-	}, {
-		key: 'createGrass',
-		value: function createGrass() {
+						this.meshes.forEach(function (obj) {
 
-			var geometry = new THREE.Geometry();
-			var meshes = [];
+								obj.mesh.castShadow = true;
+								obj.mesh.receiveShadow = true;
 
-			meshes.push(this.addGrassLeft());
-			meshes.push(this.addGrassBack());
-			meshes.push(this.addRiverbed());
-			meshes.push(this.addGrassRight());
+								_this.mesh.add(obj.mesh);
+						});
+				}
+		}, {
+				key: 'createRiver',
+				value: function createRiver() {
 
-			meshes.forEach(function (obj) {
+						var geometry = new THREE.BoxGeometry(1, 0.15, 2);
+						var mesh = new THREE.Mesh(geometry, this.materials.water);
 
-				obj.mesh.updateMatrix();
-				geometry.merge(obj.mesh.geometry, obj.mesh.matrix);
-			});
+						mesh.position.set(0.5, 0.1, 0);
+						mesh.name = 'grassland--river';
 
-			var mesh = new THREE.Mesh(geometry, this.materials.grass);
-			mesh.name = 'grassland--grass';
+						this.meshes.push({ type: 'river', mesh: mesh });
+				}
+		}, {
+				key: 'createGrass',
+				value: function createGrass() {
 
-			this.meshes.push({ type: 'grass', mesh: mesh });
-		}
-	}, {
-		key: 'addGrassLeft',
-		value: function addGrassLeft() {
+						var geometry = new THREE.Geometry();
+						var meshes = [];
 
-			var geometry = new THREE.BoxGeometry(2, 0.2, 2);
-			var mesh = new THREE.Mesh(geometry);
+						meshes.push(this.addGrassLeft());
+						meshes.push(this.addGrassBack());
+						meshes.push(this.addRiverbed());
+						meshes.push(this.addGrassRight());
 
-			mesh.position.set(-1, 0.1, 0);
+						meshes.forEach(function (obj) {
 
-			return { type: 'grass', mesh: mesh };
-		}
-	}, {
-		key: 'addGrassBack',
-		value: function addGrassBack() {
+								obj.mesh.updateMatrix();
+								geometry.merge(obj.mesh.geometry, obj.mesh.matrix);
+						});
 
-			var geometry = new THREE.BoxGeometry(1, 0.2, 0.2);
-			var mesh = new THREE.Mesh(geometry);
+						var mesh = new THREE.Mesh(geometry, this.materials.grass);
+						mesh.name = 'grassland--grass';
 
-			mesh.position.set(0.5, 0.1, -0.9);
+						this.meshes.push({ type: 'grass', mesh: mesh });
+				}
+		}, {
+				key: 'addGrassLeft',
+				value: function addGrassLeft() {
 
-			return { type: 'grass', mesh: mesh };
-		}
-	}, {
-		key: 'addRiverbed',
-		value: function addRiverbed() {
+						var geometry = new THREE.BoxGeometry(2, 0.2, 2);
+						var mesh = new THREE.Mesh(geometry);
 
-			var geometry = new THREE.BoxGeometry(1, 0.05, 2);
-			var mesh = new THREE.Mesh(geometry);
+						mesh.position.set(-1, 0.1, 0);
 
-			mesh.position.set(0.5, 0.025, 0);
+						return { type: 'grass', mesh: mesh };
+				}
+		}, {
+				key: 'addGrassBack',
+				value: function addGrassBack() {
 
-			return { type: 'grass', mesh: mesh };
-		}
-	}, {
-		key: 'addGrassRight',
-		value: function addGrassRight() {
+						var geometry = new THREE.BoxGeometry(1, 0.2, 0.2);
+						var mesh = new THREE.Mesh(geometry);
 
-			var geometry = new THREE.BoxGeometry(1, 0.2, 2);
-			var mesh = new THREE.Mesh(geometry);
+						mesh.position.set(0.5, 0.1, -0.9);
 
-			mesh.position.set(1.5, 0.1, 0);
+						return { type: 'grass', mesh: mesh };
+				}
+		}, {
+				key: 'addRiverbed',
+				value: function addRiverbed() {
 
-			return { type: 'grass', mesh: mesh };
-		}
-	}]);
+						var geometry = new THREE.BoxGeometry(1, 0.05, 2);
+						var mesh = new THREE.Mesh(geometry);
 
-	return Grassland;
+						mesh.position.set(0.5, 0.025, 0);
+
+						return { type: 'grass', mesh: mesh };
+				}
+		}, {
+				key: 'addGrassRight',
+				value: function addGrassRight() {
+
+						var geometry = new THREE.BoxGeometry(1, 0.2, 2);
+						var mesh = new THREE.Mesh(geometry);
+
+						mesh.position.set(1.5, 0.1, 0);
+
+						return { type: 'grass', mesh: mesh };
+				}
+		}]);
+
+		return Grassland;
 }();
 
 exports.default = Grassland;
@@ -740,7 +790,7 @@ exports.default = Grassland;
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+		value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -750,108 +800,108 @@ var _three = __webpack_require__(5);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Bridge = function () {
-	function Bridge() {
-		_classCallCheck(this, Bridge);
+		function Bridge() {
+				_classCallCheck(this, Bridge);
 
-		// set properties
+				// set properties
 
-		this.materials = {
-			wood: new THREE.MeshPhongMaterial({ color: COLORS.brown })
-		};
+				this.materials = {
+						wood: new THREE.MeshPhongMaterial({ color: COLORS.brown })
+				};
 
-		this.geometries = {
-			block: new THREE.BoxGeometry(0.04, 0.3, 0.04),
-			plank: new THREE.BoxGeometry(0.15, 0.02, 0.4),
-			rail: new THREE.BoxGeometry(1.2, 0.04, 0.04)
-		};
+				this.geometries = {
+						block: new THREE.BoxGeometry(0.04, 0.3, 0.04),
+						plank: new THREE.BoxGeometry(0.15, 0.02, 0.4),
+						rail: new THREE.BoxGeometry(1.2, 0.04, 0.04)
+				};
 
-		this.mesh = new THREE.Object3D();
-		this.meshes = [];
+				this.mesh = new THREE.Object3D();
+				this.meshes = [];
 
-		// init
+				// init
 
-		this.init();
-	}
-
-	_createClass(Bridge, [{
-		key: 'init',
-		value: function init() {
-			var _this = this;
-
-			this.createBase();
-			this.createRails();
-
-			this.meshes.forEach(function (obj) {
-
-				obj.mesh.castShadow = true;
-				obj.mesh.receiveShadow = true;
-
-				_this.mesh.add(obj.mesh);
-			});
+				this.init();
 		}
-	}, {
-		key: 'createBase',
-		value: function createBase() {
 
-			for (var i = 0; i < 6; i++) {
+		_createClass(Bridge, [{
+				key: 'init',
+				value: function init() {
+						var _this = this;
 
-				var mesh = new THREE.Mesh(this.geometries.plank, this.materials.wood);
+						this.createBase();
+						this.createRails();
 
-				mesh.position.set(0.2 * i, 0.21, 0.2);
+						this.meshes.forEach(function (obj) {
 
-				this.meshes.push({ type: 'block', mesh: mesh });
-			}
-		}
-	}, {
-		key: 'createRails',
-		value: function createRails() {
+								obj.mesh.castShadow = true;
+								obj.mesh.receiveShadow = true;
 
-			var rail1 = this.addRail();
-			var rail2 = this.addRail();
+								_this.mesh.add(obj.mesh);
+						});
+				}
+		}, {
+				key: 'createBase',
+				value: function createBase() {
 
-			rail2.mesh.position.set(0, 0, -0.4);
+						for (var i = 0; i < 6; i++) {
 
-			// shadow1 = shadow(rail1.mesh, 0.2)
-			// shadow2 = shadow(rail2.mesh, 0.2)
+								var mesh = new THREE.Mesh(this.geometries.plank, this.materials.wood);
 
-			this.meshes.push(rail1);
-			this.meshes.push(rail2);
+								mesh.position.set(0.2 * i, 0.21, 0.2);
 
-			// this.meshes.push(shadow1)
-			// this.meshes.push(shadow2)
-		}
-	}, {
-		key: 'addRail',
-		value: function addRail() {
+								this.meshes.push({ type: 'block', mesh: mesh });
+						}
+				}
+		}, {
+				key: 'createRails',
+				value: function createRails() {
 
-			var geometry = new THREE.Geometry();
-			var meshes = [];
+						var rail1 = this.addRail();
+						var rail2 = this.addRail();
 
-			var block1 = new THREE.Mesh(this.geometries.block, this.materials.wood);
-			var block2 = new THREE.Mesh(this.geometries.block, this.materials.wood);
-			var rail = new THREE.Mesh(this.geometries.rail, this.materials.wood);
+						rail2.mesh.position.set(0, 0, -0.4);
 
-			block1.position.set(-0.1, 0.35, 0.4);
-			block2.position.set(1.1, 0.35, 0.4);
-			rail.position.set(0.5, 0.42, 0.4);
+						// shadow1 = shadow(rail1.mesh, 0.2)
+						// shadow2 = shadow(rail2.mesh, 0.2)
 
-			meshes.push({ type: 'block', mesh: block1 });
-			meshes.push({ type: 'block', mesh: block2 });
-			meshes.push({ type: 'rail', mesh: rail });
+						this.meshes.push(rail1);
+						this.meshes.push(rail2);
 
-			meshes.forEach(function (obj) {
+						// this.meshes.push(shadow1)
+						// this.meshes.push(shadow2)
+				}
+		}, {
+				key: 'addRail',
+				value: function addRail() {
 
-				obj.mesh.updateMatrix();
-				geometry.merge(obj.mesh.geometry, obj.mesh.matrix);
-			});
+						var geometry = new THREE.Geometry();
+						var meshes = [];
 
-			var mesh = new THREE.Mesh(geometry, this.materials.wood);
+						var block1 = new THREE.Mesh(this.geometries.block, this.materials.wood);
+						var block2 = new THREE.Mesh(this.geometries.block, this.materials.wood);
+						var rail = new THREE.Mesh(this.geometries.rail, this.materials.wood);
 
-			return { type: 'rail', mesh: mesh };
-		}
-	}]);
+						block1.position.set(-0.1, 0.35, 0.4);
+						block2.position.set(1.1, 0.35, 0.4);
+						rail.position.set(0.5, 0.42, 0.4);
 
-	return Bridge;
+						meshes.push({ type: 'block', mesh: block1 });
+						meshes.push({ type: 'block', mesh: block2 });
+						meshes.push({ type: 'rail', mesh: rail });
+
+						meshes.forEach(function (obj) {
+
+								obj.mesh.updateMatrix();
+								geometry.merge(obj.mesh.geometry, obj.mesh.matrix);
+						});
+
+						var mesh = new THREE.Mesh(geometry, this.materials.wood);
+
+						return { type: 'rail', mesh: mesh };
+				}
+		}]);
+
+		return Bridge;
 }();
 
 exports.default = Bridge;
@@ -886,7 +936,7 @@ function shadow(opacity, target) {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+		value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -894,93 +944,173 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Tree = function () {
-	function Tree() {
-		var position = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { x: 0, y: 0, z: 0 };
-		var scale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+		function Tree() {
+				var position = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { x: 0, y: 0, z: 0 };
+				var scale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
-		_classCallCheck(this, Tree);
+				_classCallCheck(this, Tree);
 
-		// set properties
+				// set properties
 
-		this.position = position;
-		this.scale = scale;
+				this.position = position;
+				this.scale = scale;
 
-		this.materials = {
-			trunk: new THREE.MeshLambertMaterial({ color: COLORS.brownDark }),
-			leaves: new THREE.MeshLambertMaterial({ color: COLORS.green })
-		};
+				this.materials = {
+						trunk: new THREE.MeshLambertMaterial({ color: COLORS.brownDark }),
+						leaves: new THREE.MeshLambertMaterial({ color: COLORS.green })
+				};
 
-		this.geometries = {
-			trunk: new THREE.BoxGeometry(0.15, 0.15, 0.15),
-			leaves: new THREE.BoxGeometry(0.25, 0.4, 0.25)
-		};
+				this.geometries = {
+						trunk: new THREE.BoxGeometry(0.15, 0.15, 0.15),
+						leaves: new THREE.BoxGeometry(0.25, 0.4, 0.25)
+				};
 
-		this.mesh = new THREE.Object3D();
-		this.mesh.name = 'tree';
-		this.meshes = [];
+				this.mesh = new THREE.Object3D();
+				this.mesh.name = 'tree';
+				this.meshes = [];
 
-		// init
+				// init
 
-		this.init();
-	}
-
-	_createClass(Tree, [{
-		key: 'init',
-		value: function init() {
-			var _this = this;
-
-			this.createTrunk();
-			this.createLeaves();
-
-			this.meshes.forEach(function (obj) {
-
-				obj.mesh.castShadow = true;
-				obj.mesh.receiveShadow = true;
-
-				_this.mesh.add(obj.mesh);
-			});
-
-			var _position = this.position,
-			    x = _position.x,
-			    y = _position.y,
-			    z = _position.z;
-
-			this.mesh.position.set(x, y, z);
-			this.mesh.scale.set(this.scale, this.scale, this.scale);
-			this.uuid = this.mesh.uuid;
+				this.init();
 		}
-	}, {
-		key: 'createTrunk',
-		value: function createTrunk() {
 
-			var mesh = new THREE.Mesh(this.geometries.trunk, this.materials.trunk);
-			mesh.name = 'tree--trunk';
+		_createClass(Tree, [{
+				key: 'init',
+				value: function init() {
+						var _this = this;
 
-			this.meshes.push({ type: 'trunk', mesh: mesh });
-		}
-	}, {
-		key: 'createLeaves',
-		value: function createLeaves() {
+						this.createTrunk();
+						this.createLeaves();
 
-			var mesh = new THREE.Mesh(this.geometries.leaves, this.materials.leaves);
-			mesh.position.y = 0.275;
-			mesh.name = 'tree--leaves';
+						this.meshes.forEach(function (obj) {
 
-			this.meshes.push({ type: 'leaves', mesh: mesh });
-		}
-	}, {
-		key: 'despawn',
-		value: function despawn() {
+								obj.mesh.castShadow = true;
+								obj.mesh.receiveShadow = true;
 
-			// TODO: animation
+								_this.mesh.add(obj.mesh);
+						});
 
-		}
-	}]);
+						var _position = this.position,
+						    x = _position.x,
+						    y = _position.y,
+						    z = _position.z;
 
-	return Tree;
+						this.mesh.position.set(x, y, z);
+						this.mesh.scale.set(this.scale, this.scale, this.scale);
+						this.uuid = this.mesh.uuid;
+				}
+		}, {
+				key: 'createTrunk',
+				value: function createTrunk() {
+
+						var mesh = new THREE.Mesh(this.geometries.trunk, this.materials.trunk);
+						mesh.name = 'tree--trunk';
+
+						this.meshes.push({ type: 'trunk', mesh: mesh });
+				}
+		}, {
+				key: 'createLeaves',
+				value: function createLeaves() {
+
+						var mesh = new THREE.Mesh(this.geometries.leaves, this.materials.leaves);
+						mesh.position.y = 0.275;
+						mesh.name = 'tree--leaves';
+
+						this.meshes.push({ type: 'leaves', mesh: mesh });
+				}
+		}, {
+				key: 'despawn',
+				value: function despawn() {
+
+						// TODO: animation
+
+				}
+		}]);
+
+		return Tree;
 }();
 
 exports.default = Tree;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+		value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _math = __webpack_require__(0);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Drop = function () {
+		function Drop() {
+				_classCallCheck(this, Drop);
+
+				// set properties
+
+				this.materials = {
+						water: new THREE.MeshPhongMaterial({ color: COLORS.blue, transparent: true, opacity: 0.8 })
+				};
+
+				this.geometries = {
+						drop: new THREE.BoxGeometry(0.1, 0.1, 0.05)
+				};
+
+				this.mesh = new THREE.Object3D();
+				this.mesh.name = 'drop';
+				this.meshes = [];
+
+				this.speed = 0;
+				this.lifespan = (0, _math.random)(50, 100);
+
+				// init
+
+				this.init();
+		}
+
+		_createClass(Drop, [{
+				key: 'init',
+				value: function init() {
+
+						this.mesh = new THREE.Mesh(this.geometries.drop, this.materials.water);
+
+						var pos = {
+								x: Math.random(0.1, 0.9),
+								y: 0.1,
+								z: 1 + (Math.random() - 0.5) * 0.1
+						};
+
+						this.mesh.position.set(pos.x, pos.y, pos.z);
+
+						SCENE.add(this.mesh);
+				}
+		}, {
+				key: 'update',
+				value: function update() {
+
+						this.speed += 0.0007;
+						this.lifespan--;
+
+						this.mesh.position.x += (0.5 - this.mesh.position.x) / 70;
+						this.mesh.position.y -= this.speed;
+
+						this.mesh.scale.x -= 0.002;
+						this.mesh.scale.y -= 0.002;
+						this.mesh.scale.z -= 0.002;
+				}
+		}]);
+
+		return Drop;
+}();
+
+exports.default = Drop;
 
 /***/ })
 /******/ ]);

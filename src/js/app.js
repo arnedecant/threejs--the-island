@@ -25,9 +25,9 @@ class App {
 			debug: false,
 			camera: {
 				zpf: 5, // zoom per frame
-				// default: { x: -2.5, y: 3, z: 4 },
+				default: { x: -2.5, y: 3, z: 4 },
 				// default: { x: -1.25, y: 1.5, z: 2 },
-				default: { x: -2.5, y: 3, z: 2 },
+				// default: { x: -2.5, y: 3, z: 2 },
 				min: { x: 0, y: 0, z: 0 },
 				max: { x: 0, y: 1000, z: 1000 }
 			}
@@ -82,7 +82,7 @@ class App {
 
 		// create new scene
 
-		this.scene = new THREE.Scene()
+		this.scene = window.SCENE = new THREE.Scene()
 
 		// add fog to the scene
 
@@ -291,22 +291,24 @@ class App {
 
 		// let intersects = this.raycaster.intersectObjects(this.island.mesh.children)
 		let intersects = this.raycaster.intersectObjects(this.scene.children, true)
+		let foundTree = false
+
+		console.log(intersects)
 
 		intersects.forEach((intersect) => {
 
 			let obj = intersect.object.parent
-			if (obj.name != 'tree') return
+			if (obj.name != 'tree' || foundTree) return
 
-			let tree = this.island.trees.find((el) => el.uuid == obj.uuid)
+			foundTree = true
 
-			alert(`Tree clicked: ${ tree.uuid }`)
+			let tree = this.island.trees.find((t) => t.uuid == obj.uuid)
+			let index = this.island.trees.findIndex((t) => t.uuid == obj.uuid)
 
-			// let index = this.island.trees.findIndex(tree)
+			tree.despawn()
 
-			// tree.despawn()
-
-			// this.scene.remove(tree.mesh)
-			// this.island.trees.splice(index, 1)
+			SCENE.remove(SCENE.getObjectById(tree.mesh.id))
+			this.island.trees.splice(index, 1)
 
 		})
 
@@ -369,6 +371,7 @@ class App {
 
 		// render
 
+		this.island.render()
   		this.renderer.render(this.scene, this.camera);
 
 		// add self to the requestAnimationFrame

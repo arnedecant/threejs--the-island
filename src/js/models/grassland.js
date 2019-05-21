@@ -8,7 +8,7 @@ export default class Grassland {
 
 		this.materials = {
 			grass: new THREE.MeshPhongMaterial({ color: COLORS.greenLight }),
-			river: new THREE.MeshPhongMaterial({ color: COLORS.blue, transparent: true, opacity: 0.8 })
+			water: new THREE.MeshPhongMaterial({ color: COLORS.blue, transparent: true, opacity: 0.8 })
 		}
 
 		this.mesh = new THREE.Object3D()
@@ -40,7 +40,7 @@ export default class Grassland {
 	createRiver() {
 
 		let geometry = new THREE.BoxGeometry(1, 0.15, 2)
-		let mesh = new THREE.Mesh(geometry, this.materials.river)
+		let mesh = new THREE.Mesh(geometry, this.materials.water)
 
 		mesh.position.set(0.5, 0.1, 0)
 		mesh.name = 'grassland--river'
