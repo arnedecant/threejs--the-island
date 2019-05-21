@@ -25,8 +25,9 @@ class App {
 			debug: false,
 			camera: {
 				zpf: 5, // zoom per frame
-				default: { x: -2.5, y: 3, z: 4 },
+				// default: { x: -2.5, y: 3, z: 4 },
 				// default: { x: -1.25, y: 1.5, z: 2 },
+				default: { x: -2.5, y: 3, z: 2 },
 				min: { x: 0, y: 0, z: 0 },
 				max: { x: 0, y: 1000, z: 1000 }
 			}

@@ -8,7 +8,7 @@ export default class Grassland {
 
 		this.materials = {
 			grass: new THREE.MeshPhongMaterial({ color: COLORS.greenLight }),
-			river: new THREE.MeshPhongMaterial({ color: COLORS.blue })
+			river: new THREE.MeshPhongMaterial({ color: COLORS.blue, transparent: true, opacity: 0.8 })
 		}
 
 		this.mesh = new THREE.Object3D()
@@ -16,7 +16,7 @@ export default class Grassland {
 		this.meshes = []
 
 		// init
-		
+
 		this.init()
 
 	}

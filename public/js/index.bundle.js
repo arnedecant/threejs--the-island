@@ -136,8 +136,9 @@ var App = function () {
 			debug: false,
 			camera: {
 				zpf: 5, // zoom per frame
-				default: { x: -2.5, y: 3, z: 4 },
+				// default: { x: -2.5, y: 3, z: 4 },
 				// default: { x: -1.25, y: 1.5, z: 2 },
+				default: { x: -2.5, y: 3, z: 2 },
 				min: { x: 0, y: 0, z: 0 },
 				max: { x: 0, y: 1000, z: 1000 }
 			}
@@ -617,7 +618,7 @@ var Grassland = function () {
 
 		this.materials = {
 			grass: new THREE.MeshPhongMaterial({ color: COLORS.greenLight }),
-			river: new THREE.MeshPhongMaterial({ color: COLORS.blue })
+			river: new THREE.MeshPhongMaterial({ color: COLORS.blue, transparent: true, opacity: 0.8 })
 		};
 
 		this.mesh = new THREE.Object3D();
