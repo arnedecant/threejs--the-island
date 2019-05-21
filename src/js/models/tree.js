@@ -46,6 +46,7 @@ export default class Tree {
 		let { x, y, z } = this.position
 		this.mesh.position.set(x, y, z)
 		this.mesh.scale.set(this.scale, this.scale, this.scale)
+		this.uuid = this.mesh.uuid
 
 	}
 
@@ -65,6 +66,12 @@ export default class Tree {
   		mesh.name = 'tree--leaves'
 
 		this.meshes.push({ type: 'leaves', mesh: mesh })
+
+	}
+
+	despawn() {
+
+		// TODO: animation
 
 	}
 

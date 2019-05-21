@@ -288,20 +288,26 @@ class App {
 
 		// calculate objects intersecting the picking ray
 
-		console.log(this.island.mesh.children)
+		// let intersects = this.raycaster.intersectObjects(this.island.mesh.children)
+		let intersects = this.raycaster.intersectObjects(this.scene.children, true)
 
-		let intersects = this.raycaster.intersectObjects(this.island.mesh.children)
-		// let intersects = this.raycaster.intersectObjects(this.scene.children, true)
+		intersects.forEach((intersect) => {
 
-		console.log(intersects)
+			let obj = intersect.object.parent
+			if (obj.name != 'tree') return
 
-		// intersects.forEach((intersect) => {
+			let tree = this.island.trees.find((el) => el.uuid == obj.uuid)
 
-		// 	if (intersect.object.type != 'Object3D') return
+			alert(`Tree clicked: ${ tree.uuid }`)
 
-		// 	console.log(intersect.object)
+			// let index = this.island.trees.findIndex(tree)
 
-		// })
+			// tree.despawn()
+
+			// this.scene.remove(tree.mesh)
+			// this.island.trees.splice(index, 1)
+
+		})
 
 	}
 

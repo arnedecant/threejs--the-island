@@ -384,6 +384,7 @@ var App = function () {
 	}, {
 		key: 'click',
 		value: function click(e) {
+			var _this = this;
 
 			e.preventDefault();
 
@@ -393,20 +394,27 @@ var App = function () {
 
 			// calculate objects intersecting the picking ray
 
-			console.log(this.island.mesh.children);
+			// let intersects = this.raycaster.intersectObjects(this.island.mesh.children)
+			var intersects = this.raycaster.intersectObjects(this.scene.children, true);
 
-			var intersects = this.raycaster.intersectObjects(this.island.mesh.children);
-			// let intersects = this.raycaster.intersectObjects(this.scene.children, true)
+			intersects.forEach(function (intersect) {
 
-			console.log(intersects);
+				var obj = intersect.object.parent;
+				if (obj.name != 'tree') return;
 
-			// intersects.forEach((intersect) => {
+				var tree = _this.island.trees.find(function (el) {
+					return el.uuid == obj.uuid;
+				});
 
-			// 	if (intersect.object.type != 'Object3D') return
+				alert('Tree clicked: ' + tree.uuid);
 
-			// 	console.log(intersect.object)
+				// let index = this.island.trees.findIndex(tree)
 
-			// })
+				// tree.despawn()
+
+				// this.scene.remove(tree.mesh)
+				// this.island.trees.splice(index, 1)
+			});
 		}
 	}, {
 		key: 'mousemove',
@@ -938,6 +946,7 @@ var Tree = function () {
 
 			this.mesh.position.set(x, y, z);
 			this.mesh.scale.set(this.scale, this.scale, this.scale);
+			this.uuid = this.mesh.uuid;
 		}
 	}, {
 		key: 'createTrunk',
@@ -957,6 +966,13 @@ var Tree = function () {
 			mesh.name = 'tree--leaves';
 
 			this.meshes.push({ type: 'leaves', mesh: mesh });
+		}
+	}, {
+		key: 'despawn',
+		value: function despawn() {
+
+			// TODO: animation
+
 		}
 	}]);
 
