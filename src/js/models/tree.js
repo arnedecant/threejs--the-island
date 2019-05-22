@@ -69,6 +69,12 @@ export default class Tree {
 
 	}
 
+	grow(scale = 1) {
+
+		TweenMax.to(this.mesh.scale, 0.5, { x: scale, y: scale, z: scale });
+
+	}
+
 	despawn() {
 
 		// TODO: animation

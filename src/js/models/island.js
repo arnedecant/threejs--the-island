@@ -29,11 +29,11 @@ export default class Island {
 	init() {
 
 		let amount = 10
-		let bridgeDelay = (amount + 1) * this.delay
+		// let bridgeDelay = (amount + 1) * this.delay
 
 		this.createGrassland()
 		this.createTrees(amount)
-		this.createBridge(bridgeDelay)
+		this.createBridge(0)
 
 	}
 
@@ -77,7 +77,8 @@ export default class Island {
 
 				while (pos.x > -0.5 && pos.x < 1.5) pos.x = random(-1.75, 1.75)
 
-				let tree = new Tree(pos, scale)
+				let tree = new Tree(pos, 0.2)
+				tree.grow(scale)
 
 				this.trees.push(tree)
 				SCENE.add(tree.mesh)
@@ -97,7 +98,7 @@ export default class Island {
 		this.count++
 
 		this.drops.forEach((drop, index) => {
-			
+
 			drop.update()
 
 			if (drop.lifespan > 0) return
