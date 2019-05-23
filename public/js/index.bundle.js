@@ -554,10 +554,11 @@ var Island = function () {
 
 			var amount = 10;
 			// let bridgeDelay = (amount + 1) * this.delay
+			var bridgeDelay = 0;
 
 			this.createGrassland();
 			this.createTrees(amount);
-			this.createBridge(0);
+			this.createBridge(bridgeDelay);
 		}
 	}, {
 		key: 'createGrassland',
@@ -802,6 +803,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Bridge = function () {
 	function Bridge() {
+		var animation = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
 		_classCallCheck(this, Bridge);
 
 		// set properties
@@ -821,52 +824,79 @@ var Bridge = function () {
 
 		// init
 
-		this.init();
+		this.init(animation);
 	}
 
 	_createClass(Bridge, [{
 		key: 'init',
-		value: function init() {
+		value: function init(animation) {
 			var _this = this;
 
-			this.createBase();
 			this.createRails();
+			this.createBase(500);
 
 			this.meshes.forEach(function (obj) {
+
+				if (!obj.delay) obj.delay = 0;
 
 				obj.mesh.castShadow = true;
 				obj.mesh.receiveShadow = true;
 
-				_this.mesh.add(obj.mesh);
+				setTimeout(function () {
+
+					_this.mesh.add(obj.mesh);
+					if (obj.animate) TweenMax.to(obj.mesh.position, 0.2, obj.animate.position);
+				}, obj.delay);
 			});
 		}
 	}, {
 		key: 'createBase',
-		value: function createBase() {
+		value: function createBase(base) {
 
 			for (var i = 0; i < 6; i++) {
 
 				var mesh = new THREE.Mesh(this.geometries.plank, this.materials.wood);
 
-				mesh.position.set(0.2 * i, 0.21, 0.2);
+				mesh.position.set(0.2 * i, 0.72, 0.2);
 
-				this.meshes.push({ type: 'block', mesh: mesh });
+				this.meshes.push({
+					type: 'block',
+					mesh: mesh,
+					delay: base + i * 150,
+					animate: {
+						position: { x: 0.2 * i, y: 0.21, z: 0.2 }
+					}
+				});
 			}
 		}
 	}, {
 		key: 'createRails',
 		value: function createRails() {
+			var _this2 = this;
 
-			var rail1 = this.addRail();
-			var rail2 = this.addRail();
+			var rails = [];
 
-			rail2.mesh.position.set(0, 0, -0.4);
+			rails.push(this.addRail());
+			rails.push(this.addRail(0, 0, -0.4));
+
+			rails.forEach(function (obj, index) {
+
+				console.log(obj, index);
+
+				obj.delay = index * 250;
+				obj.animate = {
+					position: { x: obj.mesh.position.x, y: obj.mesh.position.y, z: obj.mesh.position.z }
+				};
+
+				obj.mesh.position.y += 0.5;
+
+				_this2.meshes.push(obj);
+
+				console.log(obj);
+			});
 
 			// shadow1 = shadow(rail1.mesh, 0.2)
 			// shadow2 = shadow(rail2.mesh, 0.2)
-
-			this.meshes.push(rail1);
-			this.meshes.push(rail2);
 
 			// this.meshes.push(shadow1)
 			// this.meshes.push(shadow2)
@@ -874,6 +904,10 @@ var Bridge = function () {
 	}, {
 		key: 'addRail',
 		value: function addRail() {
+			var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+			var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+			var z = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
 
 			var geometry = new THREE.Geometry();
 			var meshes = [];
@@ -897,6 +931,7 @@ var Bridge = function () {
 			});
 
 			var mesh = new THREE.Mesh(geometry, this.materials.wood);
+			mesh.position.set(x, y, z);
 
 			return { type: 'rail', mesh: mesh };
 		}
@@ -1004,20 +1039,20 @@ var Tree = function () {
 		key: 'createTrunk',
 		value: function createTrunk() {
 
-			var mesh = new THREE.Mesh(this.geometries.trunk, this.materials.trunk);
-			mesh.name = 'tree--trunk';
+			this.trunk = new THREE.Mesh(this.geometries.trunk, this.materials.trunk);
+			this.trunk.name = 'tree--trunk';
 
-			this.meshes.push({ type: 'trunk', mesh: mesh });
+			this.meshes.push({ type: 'trunk', mesh: this.trunk });
 		}
 	}, {
 		key: 'createLeaves',
 		value: function createLeaves() {
 
-			var mesh = new THREE.Mesh(this.geometries.leaves, this.materials.leaves);
-			mesh.position.y = 0.275;
-			mesh.name = 'tree--leaves';
+			this.leaves = new THREE.Mesh(this.geometries.leaves, this.materials.leaves);
+			this.leaves.position.y = 0.275;
+			this.leaves.name = 'tree--leaves';
 
-			this.meshes.push({ type: 'leaves', mesh: mesh });
+			this.meshes.push({ type: 'leaves', mesh: this.leaves });
 		}
 	}, {
 		key: 'grow',
@@ -1025,8 +1060,18 @@ var Tree = function () {
 			var scale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
 
+			this.growTrunk();
+			this.growLeaves();
+
+			this.scale = scale;
 			TweenMax.to(this.mesh.scale, 0.5, { x: scale, y: scale, z: scale });
 		}
+	}, {
+		key: 'growTrunk',
+		value: function growTrunk(delay) {}
+	}, {
+		key: 'growLeaves',
+		value: function growLeaves(delay) {}
 	}, {
 		key: 'despawn',
 		value: function despawn() {

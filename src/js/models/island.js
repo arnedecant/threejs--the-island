@@ -30,10 +30,11 @@ export default class Island {
 
 		let amount = 10
 		// let bridgeDelay = (amount + 1) * this.delay
+		let bridgeDelay = 0
 
 		this.createGrassland()
 		this.createTrees(amount)
-		this.createBridge(0)
+		this.createBridge(bridgeDelay)
 
 	}
 

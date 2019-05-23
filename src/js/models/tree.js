@@ -52,26 +52,38 @@ export default class Tree {
 
 	createTrunk() {
 
-		let mesh = new THREE.Mesh(this.geometries.trunk, this.materials.trunk)
-  		mesh.name = 'tree--trunk'
+		this.trunk = new THREE.Mesh(this.geometries.trunk, this.materials.trunk)
+  		this.trunk.name = 'tree--trunk'
 
-		this.meshes.push({ type: 'trunk', mesh: mesh })
+		this.meshes.push({ type: 'trunk', mesh: this.trunk })
 
 	}
 
 	createLeaves() {
 
-		let mesh = new THREE.Mesh(this.geometries.leaves, this.materials.leaves)
-  		mesh.position.y = 0.275
-  		mesh.name = 'tree--leaves'
+		this.leaves = new THREE.Mesh(this.geometries.leaves, this.materials.leaves)
+  		this.leaves.position.y = 0.275
+  		this.leaves.name = 'tree--leaves'
 
-		this.meshes.push({ type: 'leaves', mesh: mesh })
+		this.meshes.push({ type: 'leaves', mesh: this.leaves })
 
 	}
 
 	grow(scale = 1) {
 
-		TweenMax.to(this.mesh.scale, 0.5, { x: scale, y: scale, z: scale });
+		this.growTrunk()
+		this.growLeaves()
+
+		this.scale = scale
+		TweenMax.to(this.mesh.scale, 0.5, { x: scale, y: scale, z: scale })
+
+	}
+
+	growTrunk(delay) {
+
+	}
+
+	growLeaves(delay) {
 
 	}
 

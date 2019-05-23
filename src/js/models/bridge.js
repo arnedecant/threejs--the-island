@@ -4,7 +4,7 @@ import { shadow } from '../utilities/three.js'
 
 export default class Bridge {
 
-	constructor() {
+	constructor(animation = true) {
 
 		// set properties
 
@@ -23,35 +23,49 @@ export default class Bridge {
 
 		// init
 
-		this.init()
+		this.init(animation)
 
 	}
 
-	init() {
+	init(animation) {
 
-		this.createBase()
 		this.createRails()
+		this.createBase(500)
 
 		this.meshes.forEach((obj) => {
+
+			if (!obj.delay) obj.delay = 0
 
 			obj.mesh.castShadow = true
 			obj.mesh.receiveShadow = true
 
-			this.mesh.add(obj.mesh)
+			setTimeout(() => {
+
+				this.mesh.add(obj.mesh)
+				if (obj.animate) TweenMax.to(obj.mesh.position, 0.2, obj.animate.position)
+
+			}, obj.delay)
 
 		})
 
 	}
 
-	createBase() {
+	createBase(base) {
 
 		for (let i = 0; i < 6; i++) {
 
 			let mesh = new THREE.Mesh(this.geometries.plank, this.materials.wood)
 
-			mesh.position.set(0.2 * i, 0.21, 0.2)
+			mesh.position.set(0.2 * i, 0.72, 0.2)
 
-			this.meshes.push({ type: 'block', mesh: mesh })
+			this.meshes.push({
+				type: 'block',
+				mesh: mesh,
+				delay: base + (i * 150),
+				animate: {
+					position: { x: 0.2 * i, y: 0.21, z: 0.2 }
+				}
+			})
 
 		}
 
@@ -59,23 +73,37 @@ export default class Bridge {
 
 	createRails() {
 
-		let rail1 = this.addRail()
-		let rail2 = this.addRail()
+		let rails = []
 
-		rail2.mesh.position.set(0, 0, -0.4)
+		rails.push(this.addRail())
+		rails.push(this.addRail(0, 0, -0.4))
+
+		rails.forEach((obj, index) => {
+
+			console.log(obj, index)
+
+			obj.delay = index * 250
+			obj.animate = {
+				position: {x: obj.mesh.position.x, y: obj.mesh.position.y, z: obj.mesh.position.z}
+			}
+
+			obj.mesh.position.y += 0.5
+
+			this.meshes.push(obj)
+
+			console.log(obj)
+
+		})
 
 		// shadow1 = shadow(rail1.mesh, 0.2)
 		// shadow2 = shadow(rail2.mesh, 0.2)
-
-		this.meshes.push(rail1)
-		this.meshes.push(rail2)
 
 		// this.meshes.push(shadow1)
 		// this.meshes.push(shadow2)
 
 	}
 
-	addRail() {
+	addRail(x = 0, y = 0, z = 0) {
 
 		let geometry = new THREE.Geometry()
 		let meshes = []
@@ -100,6 +128,7 @@ export default class Bridge {
 		})
 
 		let mesh = new THREE.Mesh(geometry, this.materials.wood)
+		mesh.position.set(x, y, z)
 
 		return { type: 'rail', mesh: mesh }
 
