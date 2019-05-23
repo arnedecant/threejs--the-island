@@ -851,7 +851,7 @@ var Bridge = function () {
 		}
 	}, {
 		key: 'createBase',
-		value: function createBase(base) {
+		value: function createBase(baseDelay) {
 
 			for (var i = 0; i < 6; i++) {
 
@@ -862,7 +862,7 @@ var Bridge = function () {
 				this.meshes.push({
 					type: 'block',
 					mesh: mesh,
-					delay: base + i * 150,
+					delay: baseDelay + i * 150,
 					animate: {
 						position: { x: 0.2 * i, y: 0.21, z: 0.2 }
 					}

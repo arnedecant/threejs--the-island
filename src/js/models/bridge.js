@@ -50,7 +50,7 @@ export default class Bridge {
 
 	}
 
-	createBase(base) {
+	createBase(baseDelay) {
 
 		for (let i = 0; i < 6; i++) {
 
@@ -61,7 +61,7 @@ export default class Bridge {
 			this.meshes.push({
 				type: 'block',
 				mesh: mesh,
-				delay: base + (i * 150),
+				delay: baseDelay + (i * 150),
 				animate: {
 					position: { x: 0.2 * i, y: 0.21, z: 0.2 }
 				}
