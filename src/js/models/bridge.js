@@ -56,7 +56,7 @@ export default class Bridge {
 
 			let mesh = new THREE.Mesh(this.geometries.plank, this.materials.wood)
 
-			mesh.position.set(0.2 * i, 0.72, 0.2)
+			mesh.position.set(0.2 * i, 1.72, 0.2)
 
 			this.meshes.push({
 				type: 'block',
@@ -87,7 +87,7 @@ export default class Bridge {
 				position: {x: obj.mesh.position.x, y: obj.mesh.position.y, z: obj.mesh.position.z}
 			}
 
-			obj.mesh.position.y += 0.5
+			obj.mesh.position.y += 1.5
 
 			this.meshes.push(obj)
 

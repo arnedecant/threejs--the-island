@@ -857,7 +857,7 @@ var Bridge = function () {
 
 				var mesh = new THREE.Mesh(this.geometries.plank, this.materials.wood);
 
-				mesh.position.set(0.2 * i, 0.72, 0.2);
+				mesh.position.set(0.2 * i, 1.72, 0.2);
 
 				this.meshes.push({
 					type: 'block',
@@ -888,7 +888,7 @@ var Bridge = function () {
 					position: { x: obj.mesh.position.x, y: obj.mesh.position.y, z: obj.mesh.position.z }
 				};
 
-				obj.mesh.position.y += 0.5;
+				obj.mesh.position.y += 1.5;
 
 				_this2.meshes.push(obj);
 
